@@ -80,6 +80,7 @@ in {
     "per-user/tmux/tmux.conf".text = import ./tmux.nix { zsh = pkgs.zsh; };
   };
   environment.sessionVariables.TERMINAL = [ "alacritty" ];
+  environment.sessionVariables.EDITOR = [ "vim" ];
 
   
   programs.tmux = {
