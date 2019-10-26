@@ -34,6 +34,7 @@ in {
    extraUserActivation = {
        text = ''
         ln -sfn /etc/per-user/alacritty ~/.config/
+        ln -sfn /etc/per-user/i3 ~/.config/
         ln -sfn /etc/per-user/tmux/tmux.conf ~/.tmux.conf
         mkdir -p ~/.zfunctions
         ln -sfn ${pureZshPrompt}/pure.zsh ~/.zfunctions/prompt_pure_setup
@@ -78,6 +79,7 @@ in {
    environment.etc = {
     "per-user/alacritty/alacritty.yml".text = import ./alacritty.nix { zsh = pkgs.zsh; };
     "per-user/tmux/tmux.conf".text = import ./tmux.nix { zsh = pkgs.zsh; };
+    "per-user/i3/config".text = import ./i3.nix { zsh = pkgs.zsh; };
   };
   environment.sessionVariables.TERMINAL = [ "alacritty" ];
   environment.sessionVariables.EDITOR = [ "vim" ];
