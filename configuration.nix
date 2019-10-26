@@ -34,6 +34,7 @@ in {
    extraUserActivation = {
        text = ''
         ln -sfn /etc/per-user/alacritty ~/.config/
+        ln -sfn /etc/per-user/tmux/tmux.conf ~/.tmux.conf
         mkdir -p ~/.zfunctions
         ln -sfn ${pureZshPrompt}/pure.zsh ~/.zfunctions/prompt_pure_setup
         ln -sfn ${pureZshPrompt}/async.zsh ~/.zfunctions/async
@@ -71,11 +72,12 @@ in {
   environment.systemPackages = with pkgs; [
      wget vim google-chrome fwupd efivar systool gns3-gui gns3-server vscode
      zip p7zip git qemu gnumake gcc wireshark libpcap tigervnc telnet htop
-     alacritty
+     alacritty xsel
    ];
 
    environment.etc = {
     "per-user/alacritty/alacritty.yml".text = import ./alacritty.nix { zsh = pkgs.zsh; };
+    "per-user/tmux/tmux.conf".text = import ./tmux.nix { zsh = pkgs.zsh; };
   };
   environment.sessionVariables.TERMINAL = [ "alacritty" ];
 
