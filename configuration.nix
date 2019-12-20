@@ -40,6 +40,8 @@ in {
        text = ''
         ln -sfn /etc/per-user/alacritty ~/.config/
         ln -sfn /etc/per-user/i3 ~/.config/
+        ln -sfn /etc/per-user/i3blocks/i3blocks.conf ~/.i3blocks.conf
+         ~/.i3blocks.conf
         ln -sfn /etc/per-user/zsh/zshrc ~/.zshrc
         ln -sfn /etc/per-user/tmux/tmux.conf ~/.tmux.conf
         mkdir -p ~/.zfunctions
@@ -77,7 +79,7 @@ in {
   # $ nix search wget
   nixpkgs.config.allowUnfree = true;
   environment.systemPackages = with pkgs; [
-     wget vim google-chrome fwupd efivar systool gns3-gui gns3-server vscode
+     wget vim google-chrome fwupd efivar systool gns3-gui gns3-server 
      zip p7zip git qemu gnumake gcc wireshark libpcap tigervnc telnet htop
      alacritty xsel i3blocks dmenu dotnet-sdk xclip
      vscodeWithExtensions
@@ -87,10 +89,12 @@ in {
     "per-user/alacritty/alacritty.yml".text = import ./alacritty.nix { zsh = pkgs.zsh; };
     "per-user/tmux/tmux.conf".text = import ./tmux.nix { zsh = pkgs.zsh; };
     "per-user/i3/config".text = import ./i3.nix { zsh = pkgs.zsh; };
+    "per-user/i3blocks/i3blocks.conf".text = import ./i3blocks.nix { zsh = pkgs.zsh; };
     "per-user/zsh/zshrc".text = import ./zshrc.nix { zsh = pkgs.zsh; };
   };
   environment.sessionVariables.TERMINAL = [ "alacritty" ];
   environment.sessionVariables.EDITOR = [ "vim" ];
+  environment.pathsToLink = [ "/libexec" ];
 
   
   programs.tmux = {
@@ -168,7 +172,12 @@ in {
     default = "none";
     xterm.enable = false;
   };
-  services.xserver.windowManager.i3.enable = true;
+  services.xserver.windowManager.i3 = {
+    enable = true;
+    extraPackages = with pkgs; [
+        i3blocks
+      ];
+  };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.alan = {
