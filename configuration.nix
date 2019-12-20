@@ -11,6 +11,11 @@ let
       sha256 = "10mdk4dn2azzrhymx0ghl8v668ydy6mz5i797nmbl2ijx9hlqb3v";
     };
 
+    vscodeWithExtensions = import ./vscode.nix { 
+   	 inherit pkgs;
+    };
+
+
 
 in {
 
@@ -74,7 +79,8 @@ in {
   environment.systemPackages = with pkgs; [
      wget vim google-chrome fwupd efivar systool gns3-gui gns3-server vscode
      zip p7zip git qemu gnumake gcc wireshark libpcap tigervnc telnet htop
-     alacritty xsel
+     alacritty xsel i3blocks dmenu dotnet-sdk xclip
+     vscodeWithExtensions
    ];
 
    environment.etc = {
