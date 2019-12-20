@@ -9,8 +9,8 @@ let
 	{
 	  name = "vim";
 	  publisher = "vscodevim";
-	  version = "1.12.0";
-          sha256 = "113l9sm7xlb4bv5bhc4avdf7ngmwfx90ikf3xx6abnhignkc3fbi";
+          version = "1.12.2";
+          sha256 = "1a4r07xijrnz7bxkkpl2njwv2128hcwvmqvmirw4v41paw559231";
 	}
 	{
 	  name = "csharp";
