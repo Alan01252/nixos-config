@@ -81,7 +81,7 @@ in {
   environment.systemPackages = with pkgs; [
      wget vim google-chrome fwupd efivar systool gns3-gui gns3-server 
      zip p7zip git qemu gnumake gcc wireshark libpcap tigervnc telnet htop
-     alacritty xsel i3blocks dmenu dotnet-sdk xclip
+     alacritty xsel i3blocks dmenu dotnet-sdk xclip maim
      vscodeWithExtensions
    ];
 
