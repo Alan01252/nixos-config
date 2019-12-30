@@ -13,8 +13,12 @@ let
 
     vscodeWithExtensions = import ./vscode.nix { 
    	 inherit pkgs;
-    };
+       };
 
+
+    pythonWithPackages = import ./python.nix { 
+   	 inherit pkgs;
+    };
 
 
 in {
@@ -95,6 +99,7 @@ in {
      alacritty xsel i3blocks dmenu dotnet-sdk xclip maim
      vscodeWithExtensions omnisharp-roslyn 
      less
+     pythonWithPackages
    ];
 
    environment.etc = {
