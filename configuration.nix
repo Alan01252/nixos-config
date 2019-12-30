@@ -29,11 +29,22 @@ in {
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-  boot.kernelParams = [ 
-   "pci=noaer i915.enable_guc=3 acpi=off" 
- ];
+  
+  boot.kernelPackages = pkgs.linuxPackagesFor (pkgs.linux_latest.override {
+    argsOverride = rec { 
+      src = pkgs.fetchurl {
+            url = "mirror://kernel/linux/kernel/v5.x/linux-${version}.tar.xz";
+            sha256 = "fda561bcdea397ddd59656319c53871002938b19b554f30efed90affa30989c8";
+      }; 
+      version = "5.4.6"; 
+      modDirVersion = "5.4.6"; 
+      }; 
+  });
 
+
+  boot.kernelParams = [ 
+        "pci=noaer i915.enable_guc=3 acpi=off" 
+  ];
 
   system.userActivationScripts = {
    extraUserActivation = {
@@ -83,6 +94,7 @@ in {
      zip p7zip git qemu gnumake gcc wireshark libpcap tigervnc telnet htop
      alacritty xsel i3blocks dmenu dotnet-sdk xclip maim
      vscodeWithExtensions omnisharp-roslyn 
+     less
    ];
 
    environment.etc = {
@@ -158,7 +170,7 @@ in {
   services.xserver = {
     enable = true;
     layout = "gb";
-    videoDrivers = [ "intel" ]; 
+    #videoDrivers = [ "intel" ]; 
     displayManager.slim.enable = true;
   };
   # services.xserver.xkbOptions = "eurosign:e";
@@ -167,7 +179,6 @@ in {
   # services.xserver.libinput.enable = true;
 
   # Enable the KDE Desktop Environment.
-  # services.xserver.displayManager.sddm.enable = true;
   services.xserver.desktopManager = {
     default = "none";
     xterm.enable = false;
