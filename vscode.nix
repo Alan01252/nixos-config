@@ -18,6 +18,12 @@ let
 	  version = "1.21.9";
           sha256 = "14qn57hkw83wbafp9bpz4p7s0hia91c6hh7yc63j5br15av92ffj";
 	}
+        {
+	  name = "python";
+	  publisher = "ms-python";
+          version = "2019.11.50794";
+          sha256 = "1imc4gc3aq5x6prb8fxz70v4l838h22hfq2f8an4mldyragdz7ka";
+	}
       ];
   };
 in 
