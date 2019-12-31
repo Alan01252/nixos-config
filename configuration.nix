@@ -20,6 +20,11 @@ let
    	 inherit pkgs;
     };
 
+    bcc-12 = import ./bcc.nix { 
+   	 inherit pkgs;
+    };
+
+
 
 in {
 
@@ -34,21 +39,27 @@ in {
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   
-  boot.kernelPackages = pkgs.linuxPackagesFor (pkgs.linux_latest.override {
-    argsOverride = rec { 
-      src = pkgs.fetchurl {
-            url = "mirror://kernel/linux/kernel/v5.x/linux-${version}.tar.xz";
-            sha256 = "fda561bcdea397ddd59656319c53871002938b19b554f30efed90affa30989c8";
-      }; 
-      version = "5.4.6"; 
-      modDirVersion = "5.4.6"; 
-      }; 
-  });
+  boot.kernelPackages = let
+    linux_fixed_pkg = { fetchurl, buildLinux, ... } @args:
+	buildLinux (args // rec {
+	      version = "5.4.6"; 
+	      modDirVersion = version; 
+
+	      src = fetchurl {
+		    url = "mirror://kernel/linux/kernel/v5.x/linux-${version}.tar.xz";
+		    sha256 = "fda561bcdea397ddd59656319c53871002938b19b554f30efed90affa30989c8";
+	      }; 
+	      kernelPatches = [];
+	} // (args.argsOverride or {}));
+    linux_fixed = pkgs.callPackage linux_fixed_pkg{};
+  in
+   pkgs.recurseIntoAttrs (pkgs.linuxPackagesFor linux_fixed);
 
 
   boot.kernelParams = [ 
         "pci=noaer i915.enable_guc=3 acpi=off" 
   ];
+  boot.extraModulePackages = with config.boot.kernelPackages; [ bcc-12 ];
 
   system.userActivationScripts = {
    extraUserActivation = {
@@ -93,13 +104,17 @@ in {
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   nixpkgs.config.allowUnfree = true;
+
+
   environment.systemPackages = with pkgs; [
      wget vim google-chrome fwupd efivar systool gns3-gui gns3-server 
      zip p7zip git qemu gnumake gcc wireshark libpcap tigervnc telnet htop
      alacritty xsel i3blocks dmenu dotnet-sdk xclip maim
      vscodeWithExtensions omnisharp-roslyn 
-     less
-     pythonWithPackages
+     coreutils
+     pythonWithPackages 
+     bcc-12
+     ruby-zoom z-lua
    ];
 
    environment.etc = {
