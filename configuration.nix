@@ -221,7 +221,7 @@ in {
      isNormalUser = true;
      uid = 1000;
      home = "/home/alan";
-     extraGroups = [ "wheel" "networkmanager" ];
+     extraGroups = [ "wheel" "networkmanager" "docker"];
      shell = pkgs.zsh;
    };
 
@@ -235,8 +235,6 @@ in {
   services.sshd.enable = true;
 
   virtualisation.libvirtd.enable = true;
-
-
-
+  virtualisation.docker.enable = true;
 
 }
