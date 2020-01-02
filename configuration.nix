@@ -89,7 +89,7 @@ in {
   hardware.enableRedistributableFirmware = true;
   hardware.cpu.intel.updateMicrocode = true;
 
-  networking.hostName = "PLUSNET-QXGK"; # Define your hostname.
+  networking.hostName = "alan-nixos"; # Define your hostname.
   networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -121,6 +121,7 @@ in {
      bcc-12
      ruby-zoom z-lua
      pjsip
+     mysql-workbench
    ];
 
    environment.etc = {
