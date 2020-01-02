@@ -24,6 +24,11 @@ let
    	 inherit pkgs;
     };
 
+   dotnet = import ./dotnet.nix {
+	inherit pkgs;
+   };
+
+
 
 
 in {
@@ -109,12 +114,13 @@ in {
   environment.systemPackages = with pkgs; [
      wget vim google-chrome fwupd efivar systool gns3-gui gns3-server 
      zip p7zip git qemu gnumake gcc wireshark libpcap tigervnc telnet htop
-     alacritty xsel i3blocks dmenu dotnet-sdk xclip maim
+     alacritty xsel i3blocks dmenu dotnet xclip maim
      vscodeWithExtensions omnisharp-roslyn 
      coreutils
      pythonWithPackages 
      bcc-12
      ruby-zoom z-lua
+     pjsip
    ];
 
    environment.etc = {
