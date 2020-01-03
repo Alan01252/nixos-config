@@ -121,7 +121,7 @@ in {
      coreutils
      pythonWithPackages 
      bcc-12
-     ruby-zoom z-lua
+     lua z-lua
      pjsip
      mysql-workbench
    ];
