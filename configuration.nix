@@ -24,11 +24,13 @@ let
    	 inherit pkgs;
     };
 
-   dotnet = import ./dotnet.nix {
+    dotnet = import ./dotnet.nix {
 	inherit pkgs;
-   };
+    };
 
-
+    omnisharp = import ./omnisharp.nix {
+	inherit pkgs;
+    };
 
 
 in {
@@ -115,7 +117,7 @@ in {
      wget vim google-chrome fwupd efivar systool gns3-gui gns3-server 
      zip p7zip git qemu gnumake gcc wireshark libpcap tigervnc telnet htop
      alacritty xsel i3blocks dmenu dotnet xclip maim
-     vscodeWithExtensions omnisharp-roslyn 
+     vscodeWithExtensions omnisharp 
      coreutils
      pythonWithPackages 
      bcc-12
