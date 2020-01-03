@@ -167,6 +167,7 @@ bindsym $mod+r mode "resize"
 bindsym $mod+Ctrl+n exec google-chrome-stable
 bindsym $mod+Shift+n exec google-chrome-stable -incognito
 bindsym $mod+Shift+m exec google-chrome-stable http://gmail.com
+bindsym $mod+Shift+v exec google-chrome-stable --proxy-server="socks5://localhost:8080" --user-data-dir=~/.tmp/voxygen-proxy-chrome-profile
 bindsym $mod+Shift+i exec "maim -s | xclip -selection clipboard -t image/png"
 new_window 1pixel
 
