@@ -24,6 +24,12 @@ let
           version = "2019.11.50794";
           sha256 = "1imc4gc3aq5x6prb8fxz70v4l838h22hfq2f8an4mldyragdz7ka";
 	}
+	{
+	  name = "vscode-docker";
+	  publisher = "ms-azuretools";
+          version = "0.9.0";
+          sha256 = "0wka4sgq5xjgqq2dc3zimrdcbl9166lavscz7zm6v4n6f9s2pfj0";
+	}
       ];
   };
 in 
