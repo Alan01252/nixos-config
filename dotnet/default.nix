@@ -16,6 +16,18 @@ in rec {
     sha512 = "0i9r9pq9avixv08vwcp796kdwplz90lip07y4f50s0jqwpww070qsydplnv3pixi9dfn4s169qd97c7km3qs1snvn9yasigg1vv2wqx";
   };
 
+  aspnetcore_3_1= buildAspNetCore {
+    version = "3.1.0";
+    sha512 = "25pva1rny85wz1pkhs6434ydmwq1dcigisnhk4ld5iiz3208r4qrarc32lcqbn5shw0j5dwrwgdbnxyg8xjhkhaz4wpkz8kfihy853x";
+  };
+
+
+  netcore_3_1= buildNetCore {
+    version = "3.1.0";
+    sha512 = "11n67g0b0m9vvabvnlph53ccajkw5pr9agk3yryvwlpgln8y5fjhq537bhx4gk48hic935sc3ma0y4fk4a5rhp7iipdcw88q03ri54r";
+  };
+
+
   netcore_2_1 = buildNetCore {
     version = "2.1.13";
     sha512 = "2gkawhm4vk74qmdlpa9128brirwqxpa1b6w8jmcyd6j4i8lpnkp83jhmjjrjr4jdihchapp8qxb7sa1qdj21yswbpn03n86g8l3gh0h";

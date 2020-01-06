@@ -6,7 +6,7 @@ let
 
   dotNet = with dotNetCombined; combinePackages {
     packages = [
-    	sdk_3_1
+    	sdk_3_1 netcore_3_1
    ];
   };
 
