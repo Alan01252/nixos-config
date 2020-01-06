@@ -61,11 +61,6 @@ in {
     linux_fixed = pkgs.callPackage linux_fixed_pkg{};
   in
    pkgs.recurseIntoAttrs (pkgs.linuxPackagesFor linux_fixed);
-
-
-  boot.kernelParams = [ 
-        "pci=noaer i915.enable_guc=3 acpi=off" 
-  ];
   boot.extraModulePackages = with config.boot.kernelPackages; [ bcc-12 ];
 
   system.userActivationScripts = {
