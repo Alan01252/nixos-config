@@ -69,7 +69,6 @@ in {
         ln -sfn /etc/per-user/alacritty ~/.config/
         ln -sfn /etc/per-user/i3 ~/.config/
         ln -sfn /etc/per-user/i3blocks/i3blocks.conf ~/.i3blocks.conf
-         ~/.i3blocks.conf
         ln -sfn /etc/per-user/zsh/zshrc ~/.zshrc
         ln -sfn /etc/per-user/tmux/tmux.conf ~/.tmux.conf
         mkdir -p ~/.zfunctions
