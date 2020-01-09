@@ -119,6 +119,10 @@ in {
      lua z-lua
      pjsip
      mysql-workbench
+     strongswan
+     xl2tpd
+     gimp
+     pcmanfm
    ];
 
    environment.etc = {
