@@ -5,6 +5,11 @@
 { config, pkgs, ... }:
 
 let
+
+    unstable = import <nixos-unstable> { config = { allowUnfree = true; }; };
+
+    unstablePkgs = unstable.pkgs;
+
     pureZshPrompt = pkgs.fetchgit {
       url = "https://github.com/sindresorhus/pure";
       rev = "e7036c43487fedf608a988dde54dd1d4c0d96823";
@@ -12,12 +17,11 @@ let
     };
 
     vscodeWithExtensions = import ./vscode.nix { 
-   	 inherit pkgs;
-       };
-
+   	 pkgs = unstablePkgs;
+    };
 
     pythonWithPackages = import ./python.nix { 
-   	 inherit pkgs;
+   	 pkgs = unstablePkgs;
     };
 
     bcc-12 = import ./bcc.nix { 
@@ -33,15 +37,23 @@ let
     };
 
 
+#    nix.nixPath = [
+#  	"nixpkgs-overlays=/etc/nixos/overlays-compat/"
+#    ];
+
+
 in {
 
   
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    ];
+ imports =
+   [ # Include the results of the hardware scan.
+     ./hardware-configuration.nix
+   ];
 
-  
+  nixpkgs.overlays = [ 
+     (import ./overlays/default.nix)
+  ];
+
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -88,6 +100,9 @@ in {
   networking.hostName = "alan-nixos"; # Define your hostname.
   networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   networking.nameservers = [ "1.0.0.1" "1.1.1.1" ];
+  networking.nat.enable = true;
+  networking.nat.internalInterfaces = ["ve-+"];
+  networking.nat.externalInterface = "eth0";
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -109,7 +124,10 @@ in {
 
 
   environment.systemPackages = with pkgs; [
-     wget vim google-chrome fwupd efivar systool gns3-gui gns3-server 
+     wget vim google-chrome fwupd efivar systool 
+     myGns3.guiStable
+     myGns3.serverStable
+     silver-searcher
      zip p7zip git qemu gnumake gcc wireshark libpcap tigervnc telnet htop
      alacritty xsel i3blocks dmenu dotnet xclip maim
      vscodeWithExtensions omnisharp 
@@ -117,7 +135,7 @@ in {
      pythonWithPackages 
      bcc-12
      lua z-lua
-     pjsip
+     #pjsip
      mysql-workbench
      strongswan
      xl2tpd
