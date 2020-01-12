@@ -125,8 +125,7 @@ in {
 
   environment.systemPackages = with pkgs; [
      wget vim google-chrome fwupd efivar systool 
-     myGns3.guiStable
-     myGns3.serverStable
+     myGns3.guiStable myGns3.serverStable ubridge
      silver-searcher
      zip p7zip git qemu gnumake gcc wireshark libpcap tigervnc telnet htop
      alacritty xsel i3blocks dmenu dotnet xclip maim
@@ -141,7 +140,28 @@ in {
      xl2tpd
      gimp
      pcmanfm
+     qt5Full
    ];
+
+   security.wrappers.gns3 = {
+    source  = "${pkgs.myGns3.guiStable.out}/bin/gns3";
+    owner   = "nobody";
+    group   = "nogroup";
+   };
+
+   security.wrappers.gns3server = {
+    source  = "${pkgs.myGns3.serverStable.out}/bin/gns3server";
+    owner   = "nobody";
+    group   = "nogroup";
+   };
+
+
+   security.wrappers.ubridge = {
+    source  = "${pkgs.ubridge.out}/bin/ubridge";
+    owner   = "nobody";
+    group   = "nogroup";
+    capabilities = "cap_net_admin,cap_net_raw+ep";
+   };
 
    environment.etc = {
     "per-user/alacritty/alacritty.yml".text = import ./alacritty.nix { zsh = pkgs.zsh; };
@@ -245,7 +265,7 @@ in {
      isNormalUser = true;
      uid = 1000;
      home = "/home/alan";
-     extraGroups = [ "wheel" "networkmanager" "docker"];
+     extraGroups = [ "wheel" "networkmanager" "docker" "ubridge"];
      shell = pkgs.zsh;
    };
 
