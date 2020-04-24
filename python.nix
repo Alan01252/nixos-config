@@ -7,6 +7,8 @@ let
 	black
         netaddr
         aiohttp 
+	scapy
+	requests
   ]);
 in
   my-python-packages
