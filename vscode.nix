@@ -1,11 +1,14 @@
-{ pkgs ? import <nixpkgs> {}}:
+{ pkgs }:
 let
 
 
+  ms-vscode-csharp = pkgs.callPackage ./ms-vscode-csharp.nix {};
 
   vscode = pkgs.vscode-with-extensions.override {
+
       vscodeExtensions = with pkgs.vscode-extensions; [
           bbenoist.Nix
+	  ms-vscode-csharp
       ]
       ++
       pkgs.vscode-utils.extensionsFromVscodeMarketplace [
@@ -16,11 +19,12 @@ let
           sha256 = "1a4r07xijrnz7bxkkpl2njwv2128hcwvmqvmirw4v41paw559231";
 	}
 	{
-	  name = "csharp";
+	  name = "Go";
 	  publisher = "ms-vscode";
-	  version = "1.21.9";
-          sha256 = "14qn57hkw83wbafp9bpz4p7s0hia91c6hh7yc63j5br15av92ffj";
+          version = "0.13.1";
+          sha256 = "18x89g4b085crfm1wnfnsznwlvc30xqcivzf5nw9d1z5rg2dva5h";
 	}
+
         {
 	  name = "python";
 	  publisher = "ms-python";
@@ -57,8 +61,8 @@ let
           version = "1.4.0";
           sha256 = "0cjhglyqrwvi0b1pw20idi1z1q6fq3yv98kvr433d76p9bzz3fkj";
 	}
-
      ];
+
   };
 in 
   vscode
