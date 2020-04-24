@@ -24,9 +24,9 @@ let
    	 pkgs = unstablePkgs;
     };
 
-    bcc-12 = import ./bcc.nix { 
-   	 inherit pkgs;
-    };
+    #bcc-12 = import ./bcc.nix { 
+   #	 inherit pkgs;
+   # };
 
     dotnet = import ./dotnet.nix {
 	inherit pkgs;
@@ -73,7 +73,7 @@ in {
     linux_fixed = pkgs.callPackage linux_fixed_pkg{};
   in
    pkgs.recurseIntoAttrs (pkgs.linuxPackagesFor linux_fixed);
-  boot.extraModulePackages = with config.boot.kernelPackages; [ bcc-12 ];
+  #boot.extraModulePackages = with config.boot.kernelPackages; [ bcc-12 ];
 
   system.userActivationScripts = {
    extraUserActivation = {
@@ -132,15 +132,23 @@ in {
      vscodeWithExtensions omnisharp 
      coreutils
      pythonWithPackages 
-     bcc-12
+     #bcc-12
      lua z-lua
      #pjsip
      mysql-workbench
-     strongswan
+     unstable.strongswan
      xl2tpd
      gimp
+     nbd
      pcmanfm
      qt5Full
+     libpcap
+     openvpn
+     #unstable.terraform
+     unstable.dbeaver
+     lvm2
+     icedtea_web
+     podman runc conmon slirp4netns fuse-overlayfs
    ];
 
    security.wrappers.gns3 = {
@@ -155,7 +163,6 @@ in {
     group   = "nogroup";
    };
 
-
    security.wrappers.ubridge = {
     source  = "${pkgs.ubridge.out}/bin/ubridge";
     owner   = "nobody";
@@ -169,10 +176,39 @@ in {
     "per-user/i3/config".text = import ./i3.nix { zsh = pkgs.zsh; };
     "per-user/i3blocks/i3blocks.conf".text = import ./i3blocks.nix { zsh = pkgs.zsh; };
     "per-user/zsh/zshrc".text = import ./zshrc.nix { zsh = pkgs.zsh; };
+   };
+
+   environment.etc."containers/policy.json" = {
+    mode="0644";
+    text=''
+      {
+        "default": [
+          {
+            "type": "insecureAcceptAnything"
+          }
+        ],
+        "transports":
+          {
+            "docker-daemon":
+              {
+                "": [{"type":"insecureAcceptAnything"}]
+              }
+          }
+      }
+    '';
+   };
+
+  environment.etc."containers/registries.conf" = {
+    mode="0644";
+    text=''
+      [registries.search]
+      registries = ['docker.io', 'quay.io']
+    '';
   };
   environment.sessionVariables.TERMINAL = [ "alacritty" ];
   environment.sessionVariables.EDITOR = [ "vim" ];
   environment.pathsToLink = [ "/libexec" ];
+  environment.etc.hosts.mode = "0644";
 
   
   programs.tmux = {
@@ -215,7 +251,7 @@ in {
   # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
+  networking.firewall.enable = false;
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
@@ -267,6 +303,8 @@ in {
      home = "/home/alan";
      extraGroups = [ "wheel" "networkmanager" "docker" "ubridge"];
      shell = pkgs.zsh;
+     subUidRanges = [{ startUid = 100000; count = 65536; }];
+     subGidRanges = [{ startGid = 100000; count = 65536; }];
    };
 
 
@@ -277,6 +315,7 @@ in {
   system.stateVersion = "19.09"; # Did you read the comment?
   systemd.packages = [ pkgs.fwupd ];
   services.sshd.enable = true;
+
 
   virtualisation.libvirtd.enable = true;
   virtualisation.docker.enable = true;
