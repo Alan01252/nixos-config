@@ -57,22 +57,24 @@ in {
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  
-  boot.kernelPackages = let
-    linux_fixed_pkg = { fetchurl, buildLinux, ... } @args:
-	buildLinux (args // rec {
-	      version = "5.4.6"; 
-	      modDirVersion = version; 
+ 
+  boot.kernelPackages = pkgs.linuxPackages_latest; 
 
-	      src = fetchurl {
-		    url = "mirror://kernel/linux/kernel/v5.x/linux-${version}.tar.xz";
-		    sha256 = "fda561bcdea397ddd59656319c53871002938b19b554f30efed90affa30989c8";
-	      }; 
-	      kernelPatches = [];
-	} // (args.argsOverride or {}));
-    linux_fixed = pkgs.callPackage linux_fixed_pkg{};
-  in
-   pkgs.recurseIntoAttrs (pkgs.linuxPackagesFor linux_fixed);
+  #boot.kernelPackages = let
+  #  linux_fixed_pkg = { fetchurl, buildLinux, ... } @args:
+#	buildLinux (args // rec {
+##	      version = "5.4.6"; 
+#	      modDirVersion = version; 
+#
+#	      src = fetchurl {
+##		    url = "mirror://kernel/linux/kernel/v5.x/linux-${version}.tar.xz";
+#		    sha256 = "fda561bcdea397ddd59656319c53871002938b19b554f30efed90affa30989c8";
+#	      }; 
+#	      kernelPatches = [];
+#	} // (args.argsOverride or {}));
+##    linux_fixed = pkgs.callPackage linux_fixed_pkg{};
+ # in
+ #  pkgs.recurseIntoAttrs (pkgs.linuxPackagesFor linux_fixed);
   #boot.extraModulePackages = with config.boot.kernelPackages; [ bcc-12 ];
 
   system.userActivationScripts = {
@@ -133,7 +135,7 @@ in {
      coreutils
      pythonWithPackages 
      #bcc-12
-     lua z-lua
+     lua
      #pjsip
      mysql-workbench
      unstable.strongswan
@@ -148,7 +150,7 @@ in {
      unstable.dbeaver
      lvm2
      icedtea_web
-     podman runc conmon slirp4netns fuse-overlayfs
+     unstable.podman unstable.runc unstable.conmon unstable.slirp4netns unstable.fuse-overlayfs cni-plugins
    ];
 
    security.wrappers.gns3 = {
@@ -277,18 +279,23 @@ in {
     enable = true;
     layout = "gb";
     #videoDrivers = [ "intel" ]; 
-    displayManager.slim.enable = true;
   };
-  # services.xserver.xkbOptions = "eurosign:e";
 
-  # Enable touchpad support.
-  # services.xserver.libinput.enable = true;
 
-  # Enable the KDE Desktop Environment.
-  services.xserver.desktopManager = {
-    default = "none";
-    xterm.enable = false;
+  services.xserver.displayManager.sddm.enable = true;
+  services.xserver.displayManager.sddm.theme = "${(pkgs.fetchFromGitHub {
+    owner = "MarianArlt";
+    repo = "sddm-sugar-dark";
+    rev = "v1.2";
+    sha256 = "0gx0am7vq1ywaw2rm1p015x90b75ccqxnb1sz3wy8yjl27v82yhb";
+  })}";
+
+  services.xserver.displayManager.defaultSession = "none+i3";
+  services.xserver.desktopManager.wallpaper= {
+	mode = "scale";
+  	combineScreens = false;
   };
+
   services.xserver.windowManager.i3 = {
     enable = true;
     extraPackages = with pkgs; [
