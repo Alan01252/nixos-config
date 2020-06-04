@@ -14,7 +14,7 @@ setopt HIST_IGNORE_DUPS
 ##add timestamp for each entry
 setopt EXTENDED_HISTORY  
 alias history="fc -l -50" 
-eval "$(lua /var/run/current-system/sw/bin/z --init zsh)"
 if [ "$TMUX" = "" ]; then tmux; fi
+. ~/bin/z.sh
 xrandr --output HDMI-2 --auto --output DP-1 --auto --right-of HDMI-2
 ''
