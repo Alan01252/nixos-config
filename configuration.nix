@@ -105,6 +105,7 @@ in {
   networking.nat.enable = true;
   networking.nat.internalInterfaces = ["ve-+"];
   networking.nat.externalInterface = "eth0";
+  networking.useDHCP = true;
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -129,7 +130,8 @@ in {
      wget vim google-chrome fwupd efivar systool 
      myGns3.guiStable myGns3.serverStable ubridge
      silver-searcher
-     zip p7zip git qemu gnumake gcc wireshark libpcap tigervnc telnet htop
+     zip p7zip git git-lfs qemu gnumake gcc wireshark libpcap tigervnc telnet htop
+     qemu gnumake gcc wireshark libpcap tigervnc telnet htop
      alacritty xsel i3blocks dmenu dotnet xclip maim
      vscodeWithExtensions omnisharp 
      coreutils
@@ -324,7 +326,16 @@ in {
   services.sshd.enable = true;
 
 
-  virtualisation.libvirtd.enable = true;
+  virtualisation.libvirtd = {
+    enable = true;
+    allowedBridges = [ "br0" ];
+    qemuOvmf = true;
+    qemuRunAsRoot = true;
+    onBoot = "ignore";
+    onShutdown = "shutdown";
+  };
+
+
   virtualisation.docker.enable = true;
 
 }
