@@ -37,11 +37,6 @@ let
     };
 
 
-#    nix.nixPath = [
-#  	"nixpkgs-overlays=/etc/nixos/overlays-compat/"
-#    ];
-
-
 in {
 
   
@@ -50,9 +45,9 @@ in {
      ./hardware-configuration.nix
    ];
 
-  nixpkgs.overlays = [ 
-     (import ./overlays/default.nix)
-  ];
+  #nixpkgs.overlays = [ 
+  #   (import ./overlays/default.nix)
+  #];
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
