@@ -123,7 +123,7 @@ in {
 
   environment.systemPackages = with pkgs; [
      wget vim google-chrome fwupd efivar systool 
-     myGns3.guiStable myGns3.serverStable ubridge
+     ubridge
      silver-searcher
      zip p7zip git git-lfs qemu gnumake gcc wireshark libpcap tigervnc telnet htop
      qemu gnumake gcc wireshark libpcap tigervnc telnet htop
@@ -140,6 +140,7 @@ in {
      gimp
      nbd
      pcmanfm
+     openssl
      qt5Full
      libpcap
      openvpn
@@ -235,6 +236,7 @@ in {
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
+  services.keybase.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
@@ -248,6 +250,9 @@ in {
   # Enable sound.
   sound.enable = true;
   hardware.pulseaudio.enable = true;
+  hardware.opengl.driSupport32Bit = true;
+  hardware.opengl.extraPackages32 = with pkgs.pkgsi686Linux; [ libva ];
+  hardware.pulseaudio.support32Bit = true;
 
   fonts.fonts = with pkgs; [
     noto-fonts
