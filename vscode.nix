@@ -4,7 +4,7 @@ let
 
   ms-vscode-csharp = pkgs.callPackage ./ms-vscode-csharp.nix {};
 
-  vscode = pkgs.vscode-with-extensions.override {
+  vscode = pkgs.callPackage /home/alan/Workspace/alan/nixpkgs/pkgs/applications/editors/vscode/with-extensions.nix {
 
       vscodeExtensions = with pkgs.vscode-extensions; [
           bbenoist.Nix
@@ -15,7 +15,7 @@ let
 	{
 	  name = "vim";
 	  publisher = "vscodevim";
-          version = "1.12.2";
+          version = "1.14.5";
           sha256 = "1a4r07xijrnz7bxkkpl2njwv2128hcwvmqvmirw4v41paw559231";
 	}
 	{
@@ -51,7 +51,7 @@ let
 	}
 	{
 	  name = "terraform";
-	  publisher = "mauve";
+	  publisher = "HashiCorp";
           version = "1.4.0";
           sha256 = "0b3cqxaay85ab10x1cg7622rryf4di4d35zq9nqcjg584k6jjb34";
 	}

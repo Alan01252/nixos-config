@@ -1,24 +1,60 @@
-{ stdenv , wakatime, vscode-utils }:
+{ stdenv , unzip, fetchurl, wakatime, vscode-utils, autoPatchelfHook, glibc, gcc-unwrapped, curl, icu, openssl }:
 
 let
+
+  debugger = stdenv.mkDerivation {
+    name = "vs-code-debugger";
+    src = fetchurl {
+     url = "https://download.visualstudio.microsoft.com/download/pr/292d2e01-fb93-455f-a6b3-76cddad4f1ef/2e9b8bc5431d8f6c56025e76eaabbdff/coreclr-debug-linux-x64.zip";
+     sha256 = "1lhyjq6g6lc1b4n4z57g0ssr5msqgsmrl8yli8j9ah5s3jq1lrda";
+    };
+
+    nativeBuildInputs = [
+      unzip
+      autoPatchelfHook
+    ];
+
+    buildInputs = [
+     glibc
+     gcc-unwrapped
+     curl
+     openssl
+    ];
+
+    unpackPhase = ''
+     unzip $src
+    '';
+
+
+    installPhase = ''
+      mkdir -p "$out/"
+      mv * $out/
+      chmod a+x $out/vsdbg-ui
+      chmod a+x $out/vsdbg
+      touch $out/install.Lock
+    '';
+  };
+
   inherit (vscode-utils) buildVscodeMarketplaceExtension;
 in
   buildVscodeMarketplaceExtension {
+
+    inherit debugger;
+
     mktplcRef = {
       name = "csharp";
       publisher = "ms-dotnettools";
-      version = "1.21.17";
+      version = "1.22.0";
       sha256 = "05v6ksqng50am88h4qgsp01ni126m0v1n7wxgyask332njg971q8";
     };
 
     postInstall = ''
-      mkdir -p $out/share/vscode/extensions/ms-vscode.csharp/.omnisharp/1.34.11/
-      touch $out/share/vscode/extensions/ms-vscode.csharp/.omnisharp/1.34.11/install.Lock
-      mkdir -p $out/share/vscode/extensions/ms-vscode.csharp/.debugger/
-      touch $out/share/vscode/extensions/ms-vscode.csharp/.debugger/install.Lock
-      mkdir -p $out/share/vscode/extensions/ms-vscode.csharp/.razor/
-      touch $out/share/vscode/extensions/ms-vscode.csharp/.razor/install.Lock
-	
+      mkdir -p $out/share/vscode/extensions/ms-dotnettools.csharp/.omnisharp/1.35.0/
+      touch $out/share/vscode/extensions/ms-dotnettools.csharp/.omnisharp/1.35.0/install.Lock
+      ln -s $debugger $out/share/vscode/extensions/ms-dotnettools.csharp/.debugger
+      mkdir -p $out/share/vscode/extensions/ms-dotnettools.csharp/.razor/
+      touch $out/share/vscode/extensions/ms-dotnettools.csharp/.razor/install.Lock
+      mkdir -p $out/share/vscode/extensions/ms-dotnettools.csharp/.debugger/
     '';
 
     meta = with stdenv.lib; {
