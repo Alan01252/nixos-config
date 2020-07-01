@@ -153,19 +153,9 @@ in {
      lvm2
      icedtea_web
      unstable.podman unstable.runc unstable.conmon unstable.slirp4netns unstable.fuse-overlayfs cni-plugins
+     steam
+     icu
    ];
-
-   security.wrappers.gns3 = {
-    source  = "${pkgs.myGns3.guiStable.out}/bin/gns3";
-    owner   = "nobody";
-    group   = "nogroup";
-   };
-
-   security.wrappers.gns3server = {
-    source  = "${pkgs.myGns3.serverStable.out}/bin/gns3server";
-    owner   = "nobody";
-    group   = "nogroup";
-   };
 
    security.wrappers.ubridge = {
     source  = "${pkgs.ubridge.out}/bin/ubridge";
