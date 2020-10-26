@@ -3,12 +3,14 @@ let
 
 
   ms-vscode-csharp = pkgs.callPackage ./ms-vscode-csharp.nix {};
+  ms-liveshare = pkgs.callPackage ./ms-liveshare.nix {};
 
   vscode = pkgs.callPackage /home/alan/Workspace/alan/nixpkgs/pkgs/applications/editors/vscode/with-extensions.nix {
 
       vscodeExtensions = with pkgs.vscode-extensions; [
           bbenoist.Nix
 	  ms-vscode-csharp
+          ms-liveshare
       ]
       ++
       pkgs.vscode-utils.extensionsFromVscodeMarketplace [
@@ -28,8 +30,8 @@ let
         {
 	  name = "python";
 	  publisher = "ms-python";
-          version = "2019.11.50794";
-          sha256 = "1imc4gc3aq5x6prb8fxz70v4l838h22hfq2f8an4mldyragdz7ka";
+          version = "2020.9.112786";
+          sha256 = "0n7sgx8k9zrdrl4iqvhyqizi7ak0z6vva3paryfd7rivp0g3caw4";
 	}
 	{
 	  name = "vscode-docker";
@@ -60,6 +62,30 @@ let
 	  publisher = "streetsidesoftware";
           version = "1.4.0";
           sha256 = "0cjhglyqrwvi0b1pw20idi1z1q6fq3yv98kvr433d76p9bzz3fkj";
+	}
+        {
+	  name = "vscode-kubernetes-tools";
+	  publisher = "ms-kubernetes-tools";
+          version = "1.2.1";
+          sha256 = "071p27xcq77vbpnmb83pjsnng7h97q4gai0k6qgwg3ygv086hpf4";
+	}
+	{
+	  name = "vscode-yaml";
+	  publisher = "redhat";
+          version = "0.10.1";
+          sha256 = "0l37qwppy5dhva8qrhhnnf7y4pxhgssxfk8rkh30r7xvnk96707x";
+	}
+	{
+	  name = "vscode-pylance";
+	  publisher = "ms-python";
+          version = "2020.9.7";
+          sha256 = "1cf41bcvry0zhbrhd2yf4h5ymdwr56xgdns9fg3cc3vjnnq03rzq";
+	}
+	{
+	  name = "nix-env-selector";
+	  publisher = "arrterian";
+          version = "0.1.2";
+          sha256 = "1n5ilw1k29km9b0yzfd32m8gvwa2xhh6156d4dys6l8sbfpp2cv9";
 	}
      ];
 

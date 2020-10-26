@@ -36,6 +36,10 @@ let
 	inherit pkgs;
     };
 
+    #webook = import ./webook.nix {
+#	inherit pkgs;
+#    };
+
 
 in {
 
@@ -43,6 +47,7 @@ in {
  imports =
    [ # Include the results of the hardware scan.
      ./hardware-configuration.nix
+     ./webhook.nix
    ];
 
   #nixpkgs.overlays = [ 
@@ -96,11 +101,13 @@ in {
 
   networking.hostName = "alan-nixos"; # Define your hostname.
   networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-  networking.nameservers = [ "1.0.0.1" "1.1.1.1" ];
   networking.nat.enable = true;
   networking.nat.internalInterfaces = ["ve-+"];
   networking.nat.externalInterface = "eth0";
   networking.useDHCP = true;
+  #networking.interfaces.wlp2s0.ipv4.addresses = [ {address="192.168.1.5"; prefixLength= 24; } ];
+  #networking.defaultGateway = "192.168.1.1";
+  #networking.nameServers = "8.8.8.8";
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -126,7 +133,7 @@ in {
      ubridge
      silver-searcher
      zip p7zip git git-lfs qemu gnumake gcc wireshark libpcap tigervnc telnet htop
-     qemu gnumake gcc wireshark libpcap tigervnc telnet htop
+     gnumake gcc wireshark libpcap tigervnc telnet htop
      alacritty xsel i3blocks dmenu dotnet xclip maim
      vscodeWithExtensions omnisharp 
      coreutils
@@ -151,6 +158,8 @@ in {
      unstable.podman unstable.runc unstable.conmon unstable.slirp4netns unstable.fuse-overlayfs cni-plugins
      steam
      icu
+     vbetool
+     xorg.xhost
    ];
 
    security.wrappers.ubridge = {
@@ -253,6 +262,7 @@ in {
   hardware.opengl.driSupport32Bit = true;
   hardware.opengl.extraPackages32 = with pkgs.pkgsi686Linux; [ libva ];
   hardware.pulseaudio.support32Bit = true;
+  hardware.bluetooth.enable = true;
 
   fonts.fonts = with pkgs; [
     noto-fonts
@@ -315,9 +325,12 @@ in {
   systemd.packages = [ pkgs.fwupd ];
   services.sshd.enable = true;
 
+  services.zerotierone.enable = true;
+  services.zerotierone.joinNetworks = ["1c33c1ced08e8aba"];
+
 
   virtualisation.libvirtd = {
-    enable = true;
+    enable = false;
     allowedBridges = [ "br0" ];
     qemuOvmf = true;
     qemuRunAsRoot = true;
@@ -327,5 +340,24 @@ in {
 
 
   virtualisation.docker.enable = true;
+  virtualisation.docker.extraOptions = "--config-file=${pkgs.writeText "daemon.json" (builtins.toJSON { experimental = true; })}";
+
+  virtualisation.virtualbox.host.enable = false;
+  users.extraGroups.vboxusers.members = [ "alan" ];
+
+  docker-containers = {
+    room-assistant = {
+      image = "mkerix/room-assistant";
+      volumes = [
+        "/var/run/dbus/:/var/run/dbus/"
+        "/home/alan/Workspace/alan/room-assistant:/room-assistant/config/"
+      ];
+      extraDockerOptions = [ 
+         "--network=host"
+         "--cap-add=NET_ADMIN"
+      ];
+    };
+  };
+
 
 }

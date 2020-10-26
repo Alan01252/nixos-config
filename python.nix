@@ -9,6 +9,7 @@ let
         aiohttp 
 	scapy
 	requests
+        pylint
   ]);
 in
   my-python-packages
