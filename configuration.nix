@@ -148,7 +148,6 @@ in {
      nbd
      pcmanfm
      openssl
-     qt5Full
      libpcap
      openvpn
      #unstable.terraform
@@ -160,6 +159,7 @@ in {
      icu
      vbetool
      xorg.xhost
+     i3blocks
    ];
 
    security.wrappers.ubridge = {
@@ -321,7 +321,7 @@ in {
   # compatible, in order to avoid breaking some software such as database
   # servers. You should change this only after NixOS release notes say you
   # should.
-  system.stateVersion = "19.09"; # Did you read the comment?
+  system.stateVersion = "20.09"; # Did you read the comment?
   systemd.packages = [ pkgs.fwupd ];
   services.sshd.enable = true;
 
@@ -342,22 +342,23 @@ in {
   virtualisation.docker.enable = true;
   virtualisation.docker.extraOptions = "--config-file=${pkgs.writeText "daemon.json" (builtins.toJSON { experimental = true; })}";
 
-  virtualisation.virtualbox.host.enable = false;
+  virtualisation.virtualbox.host.enable = true;
+  virtualisation.virtualbox.guest.enable = true;
   users.extraGroups.vboxusers.members = [ "alan" ];
 
-  docker-containers = {
-    room-assistant = {
-      image = "mkerix/room-assistant";
-      volumes = [
-        "/var/run/dbus/:/var/run/dbus/"
-        "/home/alan/Workspace/alan/room-assistant:/room-assistant/config/"
-      ];
-      extraDockerOptions = [ 
-         "--network=host"
-         "--cap-add=NET_ADMIN"
-      ];
-    };
-  };
+  #virtualisation.oci-containers = {
+  #  room-assistant = {
+  ##    image = "mkerix/room-assistant";
+   #   volumes = [
+   #     "/var/run/dbus/:/var/run/dbus/"
+   #     "/home/alan/Workspace/alan/room-assistant:/room-assistant/config/"
+   #   ];
+   ##   extraDockerOptions = [ 
+    #     "--network=host"
+    #     "--cap-add=NET_ADMIN"
+    ##  ];
+   # };
+ # };
 
 
 }
