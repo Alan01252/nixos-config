@@ -69,7 +69,7 @@ colors:
     cyan:    '0x86c1b9'
     white:   '0xd8d8d8'
 
-visual_bell:
+bell:
   animation: EaseOutExpo
   duration: 0
 
@@ -91,7 +91,7 @@ selection:
   semantic_escape_chars: ",?`|:\"' ()[]{}<>"
   save_to_clipboard: true
 
-dynamic_title: true
+window.dynamic_title: true
 
 
 live_config_reload: true
