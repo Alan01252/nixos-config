@@ -3,14 +3,13 @@ let
 
 
   ms-vscode-csharp = pkgs.callPackage ./ms-vscode-csharp.nix {};
-  ms-liveshare = pkgs.callPackage ./ms-liveshare.nix {};
 
   vscode = pkgs.callPackage /home/alan/Workspace/alan/nixpkgs/pkgs/applications/editors/vscode/with-extensions.nix {
 
       vscodeExtensions = with pkgs.vscode-extensions; [
           bbenoist.Nix
 	  ms-vscode-csharp
-          ms-liveshare
+          ms-vscode.cpptools 
       ]
       ++
       pkgs.vscode-utils.extensionsFromVscodeMarketplace [
@@ -86,6 +85,12 @@ let
 	  publisher = "arrterian";
           version = "0.1.2";
           sha256 = "1n5ilw1k29km9b0yzfd32m8gvwa2xhh6156d4dys6l8sbfpp2cv9";
+	}
+	{
+	  name = "jinjahtml";
+	  publisher = "samuelcolvin";
+          version = "0.15.0";
+          sha256 = "18mjabpzldsaz5r1sp94kwk28chrmifcr4aql0fag6yh2kms1jas";
 	}
      ];
 
