@@ -13,6 +13,19 @@
     {
       "id": "screen_off",
       "execute-command": "/var/run/current-system/sw/bin/xset",
+      "pass-environment-to-command": [
+	       {
+		"source": "string",
+		"envname": "XAUTHORITY",
+		"name": "/home/alan/.Xauthority"
+	      },
+              {
+		"source": "string",
+		"envname": "DISPLAY",
+		"name": ":0"
+	      }
+      ],
+
       "pass-arguments-to-command": [
 	      {
 		"source": "string",
