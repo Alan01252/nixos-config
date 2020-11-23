@@ -129,10 +129,10 @@ in {
 
 
   environment.systemPackages = with pkgs; [
-     wget vim google-chrome fwupd efivar systool 
+     wget vim unstable.google-chrome fwupd efivar systool 
      ubridge
      silver-searcher
-     zip p7zip git git-lfs qemu gnumake gcc wireshark libpcap tigervnc telnet htop
+     zip p7zip git git-lfs qemu gnumake gcc wireshark libpcap telnet htop
      gnumake gcc wireshark libpcap tigervnc telnet htop
      alacritty xsel i3blocks dmenu dotnet xclip maim
      vscodeWithExtensions omnisharp 
@@ -152,6 +152,7 @@ in {
      openvpn
      #unstable.terraform
      unstable.dbeaver
+     unstable.velero
      lvm2
      icedtea_web
      unstable.podman unstable.runc unstable.conmon unstable.slirp4netns unstable.fuse-overlayfs cni-plugins
@@ -160,6 +161,8 @@ in {
      vbetool
      xorg.xhost
      i3blocks
+     teams
+     tigervnc
    ];
 
    security.wrappers.ubridge = {
@@ -330,7 +333,7 @@ in {
 
 
   virtualisation.libvirtd = {
-    enable = false;
+    enable = true;
     allowedBridges = [ "br0" ];
     qemuOvmf = true;
     qemuRunAsRoot = true;
@@ -346,19 +349,21 @@ in {
   virtualisation.virtualbox.guest.enable = true;
   users.extraGroups.vboxusers.members = [ "alan" ];
 
-  #virtualisation.oci-containers = {
-  #  room-assistant = {
-  ##    image = "mkerix/room-assistant";
-   #   volumes = [
-   #     "/var/run/dbus/:/var/run/dbus/"
-   #     "/home/alan/Workspace/alan/room-assistant:/room-assistant/config/"
-   #   ];
-   ##   extraDockerOptions = [ 
-    #     "--network=host"
-    #     "--cap-add=NET_ADMIN"
-    ##  ];
-   # };
- # };
+  virtualisation.oci-containers = {
+    containers = {
+      room-assistant = {
+        image = "mkerix/room-assistant";
+        volumes = [
+          "/var/run/dbus/:/var/run/dbus/"
+          "/home/alan/Workspace/alan/room-assistant:/room-assistant/config/"
+        ];
+        extraOptions = [ 
+           "--network=host"
+           "--cap-add=NET_ADMIN"
+        ];
+      };
+    };
+  };
 
 
 }
