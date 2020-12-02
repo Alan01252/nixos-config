@@ -161,8 +161,9 @@ in {
      vbetool
      xorg.xhost
      i3blocks
-     teams
+     unstable.teams
      tigervnc
+     nixpkgs-fmt
    ];
 
    security.wrappers.ubridge = {
@@ -345,8 +346,8 @@ in {
   virtualisation.docker.enable = true;
   virtualisation.docker.extraOptions = "--config-file=${pkgs.writeText "daemon.json" (builtins.toJSON { experimental = true; })}";
 
-  virtualisation.virtualbox.host.enable = true;
-  virtualisation.virtualbox.guest.enable = true;
+  virtualisation.virtualbox.host.enable = false;
+  virtualisation.virtualbox.guest.enable = false;
   users.extraGroups.vboxusers.members = [ "alan" ];
 
   virtualisation.oci-containers = {
