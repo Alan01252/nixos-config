@@ -92,6 +92,12 @@ let
           version = "0.15.0";
           sha256 = "18mjabpzldsaz5r1sp94kwk28chrmifcr4aql0fag6yh2kms1jas";
 	}
+	{
+	  name = "nix-ide";
+	  publisher = "jnoortheen";
+          version = "0.1.3";
+          sha256 = "1c2yljzjka17hr213hiqad58spk93c6q6xcxvbnahhrdfvggy8al";
+	}
      ];
 
   };
