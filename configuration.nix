@@ -28,9 +28,15 @@ let
    #	 inherit pkgs;
    # };
 
-    dotnet = import ./dotnet.nix {
-	inherit pkgs;
-    };
+
+    dotnet = with unstablePkgs.dotnetCorePackages; combinePackages
+    [
+        sdk_3_1 netcore_3_1
+        sdk_3_1 netcore_3_1
+        sdk_5_0 net_5_0
+    ];
+
+
 
     omnisharp = import ./omnisharp.nix {
 	inherit pkgs;
