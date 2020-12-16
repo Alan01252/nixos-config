@@ -170,6 +170,7 @@ in {
      unstable.teams
      tigervnc
      nixpkgs-fmt
+     rofi
    ];
 
    security.wrappers.ubridge = {
@@ -364,6 +365,7 @@ in {
           "/var/run/dbus/:/var/run/dbus/"
           "/home/alan/Workspace/alan/room-assistant:/room-assistant/config/"
         ];
+	cmd = ["--verbose"];
         extraOptions = [ 
            "--network=host"
            "--cap-add=NET_ADMIN"
