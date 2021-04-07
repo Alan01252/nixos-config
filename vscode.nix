@@ -53,8 +53,8 @@ let
 	{
 	  name = "terraform";
 	  publisher = "HashiCorp";
-          version = "1.4.0";
-          sha256 = "0b3cqxaay85ab10x1cg7622rryf4di4d35zq9nqcjg584k6jjb34";
+          version = "2.4.0";
+          sha256 = "14waz0yv25f4l46y84px2g58qnawbzp1p24zrfjqlxmp99kx009n";
 	}
 	{
 	  name = "code-spell-checker";
