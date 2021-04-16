@@ -44,13 +44,13 @@ in
     mktplcRef = {
       name = "csharp";
       publisher = "ms-dotnettools";
-      version = "1.22.0";
-      sha256 = "05v6ksqng50am88h4qgsp01ni126m0v1n7wxgyask332njg971q8";
+      version = "1.23.9";
+      sha256 = "1609yxa6h5db8hknqz12f3l8wh71lfv8ngw1yzxs6smkxbfywvg4";
     };
 
     postInstall = ''
-      mkdir -p $out/share/vscode/extensions/ms-dotnettools.csharp/.omnisharp/1.35.0/
-      touch $out/share/vscode/extensions/ms-dotnettools.csharp/.omnisharp/1.35.0/install.Lock
+      mkdir -p $out/share/vscode/extensions/ms-dotnettools.csharp/.omnisharp/1.37.6/
+      touch $out/share/vscode/extensions/ms-dotnettools.csharp/.omnisharp/1.37.6/install.Lock
       ln -s $debugger $out/share/vscode/extensions/ms-dotnettools.csharp/.debugger
       mkdir -p $out/share/vscode/extensions/ms-dotnettools.csharp/.razor/
       touch $out/share/vscode/extensions/ms-dotnettools.csharp/.razor/install.Lock
