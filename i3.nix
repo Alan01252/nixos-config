@@ -171,6 +171,8 @@ bindsym $mod+Shift+v exec google-chrome-stable --proxy-server="socks5://macos:10
 bindsym $mod+Shift+i exec "maim -s | xclip -selection clipboard -t image/png"
 new_window 1pixel
 
+for_window [class="xfreerdp"]   floating enable
+
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
