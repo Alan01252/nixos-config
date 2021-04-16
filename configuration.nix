@@ -27,14 +27,40 @@ let
     #bcc-12 = import ./bcc.nix { 
    #	 inherit pkgs;
    # };
+   #
+   #
+   callPk = pkgs.callPackage;
+   dotnet = import ./overlays/dotnet/default.nix {
+         callPackage = callPk;
+   };
 
+   azureDataStudioLatest =  import ./overlays/azuredatastudio/default.nix {
+	stdenv = pkgs.stdenv;
+	lib = pkgs.lib;
+	fetchurl = pkgs.fetchurl;
+	makeWrapper = pkgs.makeWrapper;
+	libuuid = pkgs.libuuid;
+	libunwind = pkgs.libunwind;
+	icu = pkgs.icu;
+	openssl = pkgs.openssl;
+	zlib = pkgs.zlib;
+	curl = pkgs.curl;
+	at-spi2-core = pkgs.at-spi2-core;
+	at-spi2-atk = pkgs.at-spi2-atk;
+	gnutar = pkgs.gnutar;
+	atomEnv = pkgs.atomEnv;
+	libkrb5 = pkgs.libkrb5;
+	libdrm = pkgs.libdrm;
+        mesa = pkgs.mesa;
+   };
 
-    dotnet = with unstablePkgs.dotnetCorePackages; combinePackages
-    [
-        sdk_3_1 netcore_3_1
-        sdk_3_1 netcore_3_1
-        sdk_5_0 net_5_0
-    ];
+   mono6 = import ./overlays/mono/6.nix {
+          callPackage = unstablePkgs.callPackage;
+          Foundation = unstablePkgs.Foundation;
+          libobjc = unstablePkgs.libobjc;
+   };
+
+   dotnetCombined = with dotnet; combinePackages [ sdk_5_0 net_5_0 ];
 
 
 
@@ -56,9 +82,9 @@ in {
      ./webhook.nix
    ];
 
-  #nixpkgs.overlays = [ 
-  #   (import ./overlays/default.nix)
-  #];
+  nixpkgs.overlays = [ 
+     (import ./overlays/default.nix)
+  ];
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
@@ -134,19 +160,24 @@ in {
   nixpkgs.config.allowUnfree = true;
 
 
+
   environment.systemPackages = with pkgs; [
+     azureDataStudioLatest
      wget vim unstable.google-chrome fwupd efivar systool 
      ubridge
      silver-searcher
      zip p7zip git git-lfs qemu gnumake gcc wireshark libpcap telnet htop
      gnumake gcc wireshark libpcap tigervnc telnet htop
-     alacritty xsel i3blocks dmenu dotnet xclip maim
+     alacritty xsel i3blocks dmenu 
+     dotnetCombined
+     xclip maim
      vscodeWithExtensions omnisharp 
      coreutils
      pythonWithPackages 
      #bcc-12
+     mono6
      lua
-     #pjsip
+     #pjsi
      mysql-workbench
      unstable.strongswan
      xl2tpd
@@ -171,6 +202,8 @@ in {
      tigervnc
      nixpkgs-fmt
      rofi
+     qt5Full
+     android-studio
    ];
 
    security.wrappers.ubridge = {
@@ -321,7 +354,7 @@ in {
      isNormalUser = true;
      uid = 1000;
      home = "/home/alan";
-     extraGroups = [ "wheel" "networkmanager" "docker" "ubridge"];
+     extraGroups = [ "wheel" "networkmanager" "docker" "ubridge" "adbusers"];
      shell = pkgs.zsh;
      subUidRanges = [{ startUid = 100000; count = 65536; }];
      subGidRanges = [{ startGid = 100000; count = 65536; }];
@@ -374,5 +407,20 @@ in {
     };
   };
 
+  services.nfs.server.enable = true;
+  services.nfs.server.exports = ''
+    /export       *(rw,fsid=0,no_subtree_check) 
+    /export/test  *(rw,nohide,insecure,no_subtree_check) 
+  '';
+
+  services.k3s ={
+    enable = true;
+    docker = true;
+    extraFlags = "--no-deploy traefik --no-deploy servicelb --no-deploy coredns --no-deploy metrics-server --no-flannel" ;
+  };
+
+  programs.adb.enable = true;
+
 
 }
+
