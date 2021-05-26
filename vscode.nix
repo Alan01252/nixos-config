@@ -98,6 +98,12 @@ let
           version = "0.1.3";
           sha256 = "1c2yljzjka17hr213hiqad58spk93c6q6xcxvbnahhrdfvggy8al";
 	}
+        {
+	  name = "aws-toolkit-vscode";
+	  publisher = "amazonwebservices";
+          version = "1.23.0";
+          sha256 = "0k95xl09ksvbq6v0iwkn44hrjhirza2hww82cc39if1sz52l4kgg";
+	}
      ];
 
   };
