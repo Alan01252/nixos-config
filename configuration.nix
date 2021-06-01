@@ -7,7 +7,6 @@
 let
 
     unstable = import <nixos-unstable> { config = { allowUnfree = true; }; };
-
     unstablePkgs = unstable.pkgs;
 
     pureZshPrompt = pkgs.fetchgit {
@@ -24,11 +23,6 @@ let
    	 pkgs = unstablePkgs;
     };
 
-    #bcc-12 = import ./bcc.nix { 
-   #	 inherit pkgs;
-   # };
-   #
-   #
    callPk = pkgs.callPackage;
    dotnet = import ./overlays/dotnet/default.nix {
          callPackage = callPk;
@@ -68,10 +62,6 @@ let
 	inherit pkgs;
     };
 
-    #webook = import ./webook.nix {
-#	inherit pkgs;
-#    };
-
 
 in {
 
@@ -85,29 +75,22 @@ in {
   nixpkgs.overlays = [ 
      (import ./overlays/default.nix)
   ];
-
-  # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.supportedFilesystems = [ "zfs" ];
+
+  networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+
+  # The global useDHCP flag is deprecated, therefore explicitly set to false here.
+  # Per-interface useDHCP will be mandatory in the future, so this generated config
+  # replicates the default behaviour.
+  networking.useDHCP = false;
+  networking.interfaces.eno1.useDHCP = true;
+  networking.interfaces.wlp0s20f3.useDHCP = true;
+  networking.hostId = "089f9679";
+  networking.defaultGateway = "192.168.1.1";
  
   boot.kernelPackages = pkgs.linuxPackages_latest; 
-
-  #boot.kernelPackages = let
-  #  linux_fixed_pkg = { fetchurl, buildLinux, ... } @args:
-#	buildLinux (args // rec {
-##	      version = "5.4.6"; 
-#	      modDirVersion = version; 
-#
-#	      src = fetchurl {
-##		    url = "mirror://kernel/linux/kernel/v5.x/linux-${version}.tar.xz";
-#		    sha256 = "fda561bcdea397ddd59656319c53871002938b19b554f30efed90affa30989c8";
-#	      }; 
-#	      kernelPatches = [];
-#	} // (args.argsOverride or {}));
-##    linux_fixed = pkgs.callPackage linux_fixed_pkg{};
- # in
- #  pkgs.recurseIntoAttrs (pkgs.linuxPackagesFor linux_fixed);
-  #boot.extraModulePackages = with config.boot.kernelPackages; [ bcc-12 ];
 
   system.userActivationScripts = {
    extraUserActivation = {
@@ -126,40 +109,41 @@ in {
   };
 
 
-  boot.kernelModules = ["kvm-intel"];
-  
   hardware.enableRedistributableFirmware = true;
   hardware.cpu.intel.updateMicrocode = true;
 
-  networking.hostName = "alan-nixos"; # Define your hostname.
-  networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-  networking.nat.enable = true;
-  networking.nat.internalInterfaces = ["ve-+"];
-  networking.nat.externalInterface = "eth0";
-  networking.useDHCP = true;
-  #networking.interfaces.wlp2s0.ipv4.addresses = [ {address="192.168.1.5"; prefixLength= 24; } ];
-  #networking.defaultGateway = "192.168.1.1";
-  #networking.nameServers = "8.8.8.8";
 
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
+  # Enable the X11 windowing system.
+  services.xserver = {
+    enable = true;
+    layout = "gb";
+  };
 
-  # Select internationalisation properties.
-  # i18n = {
-  #   consoleFont = "Lat2-Terminus16";
-  #   consoleKeyMap = "us";
-  #   defaultLocale = "en_US.UTF-8";
-  # };
+  services.xserver.displayManager.sddm.enable = true;
+  services.xserver.displayManager.defaultSession = "none+i3";
+  services.xserver.displayManager.sddm.theme = "${(pkgs.fetchFromGitHub {
+    owner = "MarianArlt";
+    repo = "sddm-sugar-dark";
+    rev = "v1.2";
+    sha256 = "0gx0am7vq1ywaw2rm1p015x90b75ccqxnb1sz3wy8yjl27v82yhb";
+  })}";
+  services.xserver.desktopManager.wallpaper= {
+	mode = "scale";
+  	combineScreens = false;
+  };
 
-  # Set your time zone.
+  services.xserver.windowManager.i3 = {
+    enable = true;
+    extraPackages = with pkgs; [
+        i3blocks
+      ];
+  };
+
+
+ 
   time.timeZone = "Europe/London";
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
   nixpkgs.config.allowUnfree = true;
-
-
 
   environment.systemPackages = with pkgs; [
      azureDataStudioLatest
@@ -174,10 +158,8 @@ in {
      vscodeWithExtensions omnisharp 
      coreutils
      pythonWithPackages 
-     #bcc-12
      mono6
      lua
-     #pjsi
      mysql-workbench
      unstable.strongswan
      xl2tpd
@@ -187,7 +169,6 @@ in {
      openssl
      libpcap
      openvpn
-     #unstable.terraform
      unstable.dbeaver
      unstable.velero
      lvm2
@@ -204,6 +185,8 @@ in {
      rofi
      qt5Full
      android-studio
+     feh
+     kubectl
    ];
 
    security.wrappers.ubridge = {
@@ -280,21 +263,10 @@ in {
     '';
   };
 
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = { enable = true; enableSSHSupport = true; };
-
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
   services.openssh.enable = true;
   services.keybase.enable = true;
 
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
+  system.stateVersion = "20.09"; # Did you read the comment?
   networking.firewall.enable = false;
 
   # Enable CUPS to print documents.
@@ -320,35 +292,7 @@ in {
     proggyfonts
   ];
 
-  # Enable the X11 windowing system.
-  services.xserver = {
-    enable = true;
-    layout = "gb";
-    #videoDrivers = [ "intel" ]; 
-  };
-
-
-  services.xserver.displayManager.sddm.enable = true;
-  services.xserver.displayManager.sddm.theme = "${(pkgs.fetchFromGitHub {
-    owner = "MarianArlt";
-    repo = "sddm-sugar-dark";
-    rev = "v1.2";
-    sha256 = "0gx0am7vq1ywaw2rm1p015x90b75ccqxnb1sz3wy8yjl27v82yhb";
-  })}";
-
-  services.xserver.displayManager.defaultSession = "none+i3";
-  services.xserver.desktopManager.wallpaper= {
-	mode = "scale";
-  	combineScreens = false;
-  };
-
-  services.xserver.windowManager.i3 = {
-    enable = true;
-    extraPackages = with pkgs; [
-        i3blocks
-      ];
-  };
-
+ 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.alan = {
      isNormalUser = true;
@@ -361,11 +305,6 @@ in {
    };
 
 
-  # This value determines the NixOS release with which your system is to be
-  # compatible, in order to avoid breaking some software such as database
-  # servers. You should change this only after NixOS release notes say you
-  # should.
-  system.stateVersion = "20.09"; # Did you read the comment?
   systemd.packages = [ pkgs.fwupd ];
   services.sshd.enable = true;
 
@@ -407,11 +346,7 @@ in {
     };
   };
 
-  services.nfs.server.enable = true;
-  services.nfs.server.exports = ''
-    /export       *(rw,fsid=0,no_subtree_check) 
-    /export/test  *(rw,nohide,insecure,no_subtree_check) 
-  '';
+  services.nfs.server.enable = false;
 
   services.k3s ={
     enable = true;
@@ -420,7 +355,5 @@ in {
   };
 
   programs.adb.enable = true;
-
-
 }
 

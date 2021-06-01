@@ -16,7 +16,5 @@ setopt EXTENDED_HISTORY
 alias history="fc -l -50" 
 if [ "$TMUX" = "" ]; then tmux; fi
 . ~/bin/z.sh
-xrandr --output HDMI-2 --auto --output DP-1 --auto --right-of HDMI-2
-PROMPT='$(kubeprompt -f default)'$PROMPT
-
+xrandr --output DP-2 --auto --output DP-1 --auto --right-of DP-2
 ''
