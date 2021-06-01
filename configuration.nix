@@ -80,7 +80,6 @@ in {
   boot.supportedFilesystems = [ "zfs" ];
 
   networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-  networking.wireless.networks.vodafone0E2D79.psk = "6Tqa2r9HzmenXncJ";
 
   # The global useDHCP flag is deprecated, therefore explicitly set to false here.
   # Per-interface useDHCP will be mandatory in the future, so this generated config
