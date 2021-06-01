@@ -322,7 +322,11 @@ in {
   };
 
 
-  virtualisation.docker.enable = true;
+  virtualisation.docker = {
+        enable = true;
+        storageDriver = "zfs";
+  };
+  systemd.services.docker.path = [ pkgs.zfs ];
   virtualisation.docker.extraOptions = "--config-file=${pkgs.writeText "daemon.json" (builtins.toJSON { experimental = true; })}";
 
   virtualisation.virtualbox.host.enable = false;
