@@ -186,6 +186,8 @@ in {
      rofi
      qt5Full
      android-studio
+     feh
+     kubectl
    ];
 
    security.wrappers.ubridge = {
