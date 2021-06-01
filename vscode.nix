@@ -17,15 +17,8 @@ let
 	  name = "vim";
 	  publisher = "vscodevim";
           version = "1.14.5";
-          sha256 = "1a4r07xijrnz7bxkkpl2njwv2128hcwvmqvmirw4v41paw559231";
+          sha256 = "013h12qhj1h1pcjns2l5dn2hb52p8j468f5n5sw62gq4vfr9yvyf";
 	}
-	{
-	  name = "Go";
-	  publisher = "ms-vscode";
-          version = "0.13.1";
-          sha256 = "18x89g4b085crfm1wnfnsznwlvc30xqcivzf5nw9d1z5rg2dva5h";
-	}
-
         {
 	  name = "python";
 	  publisher = "ms-python";
@@ -41,7 +34,7 @@ let
  	{
 	  name = "dotnet-test-explorer";
 	  publisher = "formulahendry";
-          version = "0.7.1";
+          version = "0.7.5";
           sha256 = "1v80dclx4l8iza27d0d5ybfywdz3rid07h05rs0hwpiyfpb23pw8";
 	}
 	{
