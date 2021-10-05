@@ -3,8 +3,8 @@
 pkgs.stdenv.mkDerivation {
   name = "flux2";
   src = pkgs.fetchzip {
-    url = "https://github.com/fluxcd/flux2/releases/download/v0.13.4/flux_0.13.4_linux_amd64.tar.gz";
-    sha256 = "0cy03li8nn41pbg8sjx8gmwlx289s3mpc1qg23viawa60xb8cd5y";
+    url = "https://github.com/fluxcd/flux2/releases/download/v0.16.1/flux_0.16.1_linux_amd64.tar.gz";
+    sha256 = "09pj97sklj4ryv2jppba1gj142rv1qlmy36bd705ym0wb7n3ym9b";
   };
   phases = ["installPhase" "patchPhase"];
   installPhase = ''
