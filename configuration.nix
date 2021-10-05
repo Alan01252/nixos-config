@@ -58,9 +58,11 @@ let
 
 
 
-    omnisharp = import ./omnisharp.nix {
+    flux = import ./flux.nix {
 	inherit pkgs;
     };
+
+
 
 
 in {
@@ -80,6 +82,8 @@ in {
   boot.supportedFilesystems = [ "zfs" ];
 
   networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  networking.wireless.interfaces = ["wlp0s20f3"];
+  networking.resolvconf.dnsExtensionMechanism = false;
 
   # The global useDHCP flag is deprecated, therefore explicitly set to false here.
   # Per-interface useDHCP will be mandatory in the future, so this generated config
@@ -89,8 +93,16 @@ in {
   networking.interfaces.wlp0s20f3.useDHCP = true;
   networking.hostId = "089f9679";
   networking.defaultGateway = "192.168.1.1";
+
+   networking.extraHosts =
+  ''
+     192.168.1.15 macos
+     127.0.0.99 docker.internal.speik.net
+  '';
+  networking.nameservers = ["127.0.0.1"];
+  networking.dhcpcd.extraConfig = "nohook resolv.conf";
  
-  boot.kernelPackages = pkgs.linuxPackages_latest; 
+  boot.kernelPackages = pkgs.linuxPackages;
 
   system.userActivationScripts = {
    extraUserActivation = {
@@ -155,7 +167,7 @@ in {
      alacritty xsel i3blocks dmenu 
      dotnetCombined
      xclip maim
-     vscodeWithExtensions omnisharp 
+     vscodeWithExtensions omnisharp-roslyn 
      coreutils
      pythonWithPackages 
      mono6
@@ -186,7 +198,29 @@ in {
      qt5Full
      android-studio
      feh
-     kubectl
+     unstable.kubectl
+     unstable.kustomize
+     kubectx
+     flux
+     unstable.age
+     unstable.kubeprompt
+     unstable.kind
+     freerdp
+     unstable.packer
+     bind
+     killall
+     file
+     unstable.sops
+     unstable.terraform_0_15
+     aws-iam-authenticator
+     unstable.awscli2
+     pass
+     pinentry
+     pinentry-curses
+     ncdu
+     bfg-repo-cleaner
+     zoxide
+     fzf
    ];
 
    security.wrappers.ubridge = {
@@ -241,6 +275,13 @@ in {
     enable = true;
     clock24 = true;
   };
+
+  programs.gnupg.agent = {
+    enable = true;
+    enableSSHSupport = false;
+    pinentryFlavor = "curses";
+  };
+
 
   programs.ssh = {
     startAgent = true;
@@ -313,7 +354,7 @@ in {
 
 
   virtualisation.libvirtd = {
-    enable = true;
+    enable = false;
     allowedBridges = [ "br0" ];
     qemuOvmf = true;
     qemuRunAsRoot = true;
@@ -327,6 +368,8 @@ in {
         storageDriver = "zfs";
   };
   systemd.services.docker.path = [ pkgs.zfs ];
+  systemd.services.docker.environment = {
+  };
   virtualisation.docker.extraOptions = "--config-file=${pkgs.writeText "daemon.json" (builtins.toJSON { experimental = true; })}";
 
   virtualisation.virtualbox.host.enable = false;
@@ -353,11 +396,35 @@ in {
   services.nfs.server.enable = false;
 
   services.k3s ={
-    enable = true;
+    enable = false;
     docker = true;
     extraFlags = "--no-deploy traefik --no-deploy servicelb --no-deploy coredns --no-deploy metrics-server --no-flannel" ;
   };
 
   programs.adb.enable = true;
+
+  services.dnscrypt-proxy2 = {
+    enable = true;
+    settings = {
+      listen_addresses = [ "0.0.0.0:53" ];
+      ipv6_servers = true;
+      block_ipv6= true;
+      require_dnssec = true;
+
+      sources.public-resolvers = {
+        urls = [
+          "https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v3/public-resolvers.md"
+          "https://download.dnscrypt.info/resolvers-list/v3/public-resolvers.md"
+        ];
+        cache_file = "/var/lib/dnscrypt-proxy2/public-resolvers.md";
+        minisign_key = "RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3";
+      };
+
+      #server_names = [  
+	#"sdns://AQcAAAAAAAAADTUxLjE1OC4xNjYuOTcgAyfzz5J-mV9G-yOB4Hwcdk7yX12EQs5Iva7kV3oGtlEgMi5kbnNjcnlwdC1jZXJ0LmFjc2Fjc2FyLWFtcy5jb20"
+      #];
+    };
+  };
+
 }
 
