@@ -7,7 +7,6 @@ let
   vscode = pkgs.callPackage /home/alan/Workspace/alan/nixpkgs/pkgs/applications/editors/vscode/with-extensions.nix {
 
       vscodeExtensions = with pkgs.vscode-extensions; [
-          bbenoist.Nix
 	  ms-vscode-csharp
           ms-vscode.cpptools 
       ]
@@ -16,26 +15,26 @@ let
 	{
 	  name = "vim";
 	  publisher = "vscodevim";
-          version = "1.14.5";
-          sha256 = "013h12qhj1h1pcjns2l5dn2hb52p8j468f5n5sw62gq4vfr9yvyf";
+          version = "1.21.1";
+          sha256 = "1zw9q3jaypw5db8h4fcrwabxvnm5pnb9mjyqwgprpkrd2vw5lvwi";
 	}
         {
 	  name = "python";
 	  publisher = "ms-python";
-          version = "2020.9.112786";
-          sha256 = "0n7sgx8k9zrdrl4iqvhyqizi7ak0z6vva3paryfd7rivp0g3caw4";
+          version = "2021.9.1246542782";
+          sha256 = "105vj20749bck6ijdlf7hsg5nb82bi5pklf80l1s7fn4ajr2yk02";
 	}
 	{
 	  name = "vscode-docker";
 	  publisher = "ms-azuretools";
-          version = "0.9.0";
-          sha256 = "0wka4sgq5xjgqq2dc3zimrdcbl9166lavscz7zm6v4n6f9s2pfj0";
+          version = "1.17.0";
+          sha256 = "01na7j64mavn2zqfxkly9n6fpr6bs3vyiipy09jkmr5m86fq0cdx";
 	}
  	{
 	  name = "dotnet-test-explorer";
 	  publisher = "formulahendry";
-          version = "0.7.5";
-          sha256 = "1v80dclx4l8iza27d0d5ybfywdz3rid07h05rs0hwpiyfpb23pw8";
+          version = "0.7.7";
+          sha256 = "0h8lhsz993wzy4am0dgb0318mfrc5isywcxi0k4nakzj0dkk3w6y";
 	}
 	{
 	  name = "vscode-coverage-gutters";
@@ -46,57 +45,64 @@ let
 	{
 	  name = "terraform";
 	  publisher = "HashiCorp";
-          version = "2.4.0";
-          sha256 = "14waz0yv25f4l46y84px2g58qnawbzp1p24zrfjqlxmp99kx009n";
+          version = "2.15.0";
+          sha256 = "0bqf9ry0idqw61714dc6y1rh5js35mi14q19yqhiwayyfakwraq9";
 	}
 	{
 	  name = "code-spell-checker";
 	  publisher = "streetsidesoftware";
-          version = "1.4.0";
-          sha256 = "0cjhglyqrwvi0b1pw20idi1z1q6fq3yv98kvr433d76p9bzz3fkj";
+          version = "2.0.8";
+          sha256 = "165yfw25z9rdcb3qbc38gfgs88mmam8m4sa3sq3g0fsapipar5cr";
 	}
         {
 	  name = "vscode-kubernetes-tools";
 	  publisher = "ms-kubernetes-tools";
-          version = "1.2.1";
-          sha256 = "071p27xcq77vbpnmb83pjsnng7h97q4gai0k6qgwg3ygv086hpf4";
+          version = "1.3.3";
+          sha256 = "1w22wyqszizcmr6qw0d5hqg64455yphzjjq6w13izc2flpird1kl";
 	}
 	{
 	  name = "vscode-yaml";
 	  publisher = "redhat";
-          version = "0.10.1";
-          sha256 = "0l37qwppy5dhva8qrhhnnf7y4pxhgssxfk8rkh30r7xvnk96707x";
+          version = "0.23.0";
+          sha256 = "0hdly0cxj13fs5q06nlcic3yhv6jq641q01y07sxl9xaprb0n2dm";
 	}
 	{
 	  name = "vscode-pylance";
 	  publisher = "ms-python";
-          version = "2020.9.7";
-          sha256 = "1cf41bcvry0zhbrhd2yf4h5ymdwr56xgdns9fg3cc3vjnnq03rzq";
+          version = "2021.9.4";
+          sha256 = "1579h6zfrws55xh7cz4lg7p5j7r5awrlhk7b49mr3781q980zqbr";
 	}
 	{
 	  name = "nix-env-selector";
 	  publisher = "arrterian";
-          version = "0.1.2";
-          sha256 = "1n5ilw1k29km9b0yzfd32m8gvwa2xhh6156d4dys6l8sbfpp2cv9";
+          version = "1.0.7";
+          sha256 = "0mralimyzhyp4x9q98x3ck64ifbjqdp8cxcami7clvdvkmf8hxhf";
 	}
 	{
 	  name = "jinjahtml";
 	  publisher = "samuelcolvin";
-          version = "0.15.0";
-          sha256 = "18mjabpzldsaz5r1sp94kwk28chrmifcr4aql0fag6yh2kms1jas";
+          version = "0.16.0";
+          sha256 = "17f4dzwsqpwdkzc9f35sx31mvb4zns2ya0ym7mjgl8iy1kyci66q";
 	}
 	{
 	  name = "nix-ide";
 	  publisher = "jnoortheen";
-          version = "0.1.3";
-          sha256 = "1c2yljzjka17hr213hiqad58spk93c6q6xcxvbnahhrdfvggy8al";
+          version = "0.1.16";
+          sha256 = "04ky1mzyjjr1mrwv3sxz4mgjcq5ylh6n01lvhb19h3fmwafkdxbp";
 	}
         {
 	  name = "aws-toolkit-vscode";
 	  publisher = "amazonwebservices";
-          version = "1.23.0";
-          sha256 = "0k95xl09ksvbq6v0iwkn44hrjhirza2hww82cc39if1sz52l4kgg";
+          version = "1.30.0";
+          sha256 = "1w77mi94xbm4fmsbxjq607f5yhh4z9g0d8g1z27c8g9lzqjf75g2";
 	}
+	{
+	  name = "Go";
+	  publisher = "golang";
+          version = "0.28.1";
+          sha256 = "1fiycdss64izdxk7gnp1gx6bdl040cr5lk17cnb2p30qpgpjv0gz";
+	}
+
      ];
 
   };
