@@ -93,9 +93,8 @@
     },
   ]
   '';
-  users.users.webhook = {
-    isNormalUser = false;
-  };
+  users.users.webhook.isNormalUser = false;
+  users.users.webhook.isSystemUser = true;
 
   systemd.services.webhook = {
     enable = true;
