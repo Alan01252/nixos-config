@@ -96,6 +96,10 @@
   users.users.webhook.isNormalUser = false;
   users.users.webhook.isSystemUser = true;
 
+  users.users.webhook.group = "webhook";
+  users.groups.webhook = {};
+
+
   systemd.services.webhook = {
     enable = true;
 
