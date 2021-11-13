@@ -26,7 +26,7 @@
            };
          })
 	./configuration.nix 
-     ];
+       ];
     };
   };
 }

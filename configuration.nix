@@ -6,8 +6,6 @@
 
 let
 
-    unstable = import <nixos-unstable> { config = { allowUnfree = true; }; };
-    unstablePkgs = unstable.pkgs;
 
     pureZshPrompt = pkgs.fetchgit {
       url = "https://github.com/sindresorhus/pure";
@@ -16,11 +14,11 @@ let
     };
 
     vscodeWithExtensions = import ./vscode.nix { 
-   	 pkgs = unstablePkgs;
+   	 pkgs = pkgs.unstable;
     };
 
     pythonWithPackages = import ./python.nix { 
-   	 pkgs = unstablePkgs;
+   	 pkgs = pkgs.unstable;
     };
 
    callPk = pkgs.callPackage;

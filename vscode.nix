@@ -4,12 +4,10 @@ let
 
   ms-vscode-csharp = pkgs.callPackage ./ms-vscode-csharp.nix {};
 
-  vscode = pkgs.callPackage /home/alan/Workspace/alan/nixpkgs/pkgs/applications/editors/vscode/with-extensions.nix {
-
-      vscodeExtensions = with pkgs.vscode-extensions; [
+  extensions = (with pkgs.vscode-extensions; [
 	  ms-vscode-csharp
           ms-vscode.cpptools 
-      ]
+      ])
       ++
       pkgs.vscode-utils.extensionsFromVscodeMarketplace [
 	{
@@ -104,7 +102,8 @@ let
 	}
 
      ];
-
-  };
+     vscode = pkgs.vscode-with-extensions.override {
+	vscodeExtensions = extensions;
+     };
 in 
   vscode
