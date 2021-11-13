@@ -1,8 +1,33 @@
 {
-  outputs = { self, nixpkgs }: {
+
+
+   inputs = {
+      nixpkgs.url = "nixpkgs/nixos-21.05";
+      nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
+  };
+
+  outputs = { self, nixpkgs, nixpkgs-unstable }: 
+  let 
+    unstableOverlay = final: prev: {
+      unstable = import nixpkgs-unstable {
+        system = "x86_64-linux";
+	config.allowUnfree = true;
+      };
+    };
+  in
+  {
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
-      modules = [ ./configuration.nix ];
+      modules = [ 
+         ({
+           nixpkgs = {
+             overlays = [ unstableOverlay ];
+             config.allowUnfree = true; 
+           };
+         })
+	./configuration.nix 
+     ];
     };
   };
 }
+
