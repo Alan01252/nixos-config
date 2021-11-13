@@ -371,16 +371,6 @@ in {
   services.zerotierone.joinNetworks = ["1c33c1ced08e8aba"];
 
 
-  virtualisation.libvirtd = {
-    enable = false;
-    allowedBridges = [ "br0" ];
-    qemuOvmf = true;
-    qemuRunAsRoot = true;
-    onBoot = "ignore";
-    onShutdown = "shutdown";
-  };
-
-
   virtualisation.docker = {
         enable = true;
         storageDriver = "zfs";
