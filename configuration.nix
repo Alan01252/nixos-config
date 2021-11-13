@@ -24,39 +24,6 @@ let
     };
 
    callPk = pkgs.callPackage;
-   dotnet = import ./overlays/dotnet/default.nix {
-         callPackage = callPk;
-   };
-
-   azureDataStudioLatest =  import ./overlays/azuredatastudio/default.nix {
-	stdenv = pkgs.stdenv;
-	lib = pkgs.lib;
-	fetchurl = pkgs.fetchurl;
-	makeWrapper = pkgs.makeWrapper;
-	libuuid = pkgs.libuuid;
-	libunwind = pkgs.libunwind;
-	icu = pkgs.icu;
-	openssl = pkgs.openssl;
-	zlib = pkgs.zlib;
-	curl = pkgs.curl;
-	at-spi2-core = pkgs.at-spi2-core;
-	at-spi2-atk = pkgs.at-spi2-atk;
-	gnutar = pkgs.gnutar;
-	atomEnv = pkgs.atomEnv;
-	libkrb5 = pkgs.libkrb5;
-	libdrm = pkgs.libdrm;
-        mesa = pkgs.mesa;
-   };
-
-   mono6 = import ./overlays/mono/6.nix {
-          callPackage = unstablePkgs.callPackage;
-          Foundation = unstablePkgs.Foundation;
-          libobjc = unstablePkgs.libobjc;
-   };
-
-   dotnetCombined = with dotnet; combinePackages [ sdk_5_0 net_5_0 ];
-
-
 
     flux = import ./flux.nix {
 	inherit pkgs;
@@ -166,7 +133,6 @@ in {
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
-     azureDataStudioLatest
      wget vim unstable.google-chrome fwupd efivar systool 
      ubridge
      go gopls go-outline
@@ -174,7 +140,8 @@ in {
      zip p7zip git git-lfs qemu gnumake gcc wireshark libpcap telnet htop
      gnumake gcc wireshark libpcap tigervnc telnet htop
      alacritty xsel i3blocks dmenu 
-     dotnetCombined
+     unstable.dotnet-sdk_6
+     unstable.mono
      xclip maim
      vscodeWithExtensions omnisharp-roslyn 
      coreutils
