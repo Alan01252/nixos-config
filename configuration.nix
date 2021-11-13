@@ -67,6 +67,12 @@ let
 
 in {
 
+ nix = {
+   package = pkgs.nixFlakes;
+   extraOptions = ''
+     experimental-features = nix-command flakes
+   '';
+ };
   
  imports =
    [ # Include the results of the hardware scan.
@@ -98,11 +104,13 @@ in {
   ''
      192.168.1.15 macos
      127.0.0.99 docker.internal.speik.net
+     127.0.0.99 nexus.internal.speik.net
   '';
   networking.nameservers = ["127.0.0.1"];
   networking.dhcpcd.extraConfig = "nohook resolv.conf";
  
-  boot.kernelPackages = pkgs.linuxPackages;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
 
   system.userActivationScripts = {
    extraUserActivation = {
@@ -161,6 +169,7 @@ in {
      azureDataStudioLatest
      wget vim unstable.google-chrome fwupd efivar systool 
      ubridge
+     go gopls go-outline
      silver-searcher
      zip p7zip git git-lfs qemu gnumake gcc wireshark libpcap telnet htop
      gnumake gcc wireshark libpcap tigervnc telnet htop
@@ -221,6 +230,9 @@ in {
      bfg-repo-cleaner
      zoxide
      fzf
+     bluez
+     bluez-tools
+     keepass
    ];
 
    security.wrappers.ubridge = {
@@ -320,6 +332,12 @@ in {
   hardware.opengl.extraPackages32 = with pkgs.pkgsi686Linux; [ libva ];
   hardware.pulseaudio.support32Bit = true;
   hardware.bluetooth.enable = true;
+  hardware.bluetooth.settings = {
+    General = {
+     ControllerMode = "dual";
+    };
+  };
+	
 
   fonts.fonts = with pkgs; [
     noto-fonts
@@ -366,6 +384,7 @@ in {
   virtualisation.docker = {
         enable = true;
         storageDriver = "zfs";
+	logDriver = "json-file";
   };
   systemd.services.docker.path = [ pkgs.zfs ];
   systemd.services.docker.environment = {
@@ -388,6 +407,7 @@ in {
         extraOptions = [ 
            "--network=host"
            "--cap-add=NET_ADMIN"
+           "--cap-add=NET_RAW"
         ];
       };
     };
