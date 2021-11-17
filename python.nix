@@ -10,6 +10,7 @@ let
 	scapy
 	requests
         pylint
+        pyyaml
   ]);
 in
   my-python-packages
