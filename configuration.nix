@@ -140,11 +140,11 @@ in {
      alacritty xsel i3blocks dmenu 
      unstable.dotnet-sdk_6
      unstable.mono
+     unstable.msbuild
      xclip maim
-     vscodeWithExtensions omnisharp-roslyn 
+     vscodeWithExtensions unstable.omnisharp-roslyn 
      coreutils
      pythonWithPackages 
-     mono6
      lua
      mysql-workbench
      unstable.strongswan
