@@ -13,7 +13,7 @@ let
 	{
 	  name = "vim";
 	  publisher = "vscodevim";
-          version = "1.21.1";
+          version = "1.21.10";
           sha256 = "1zw9q3jaypw5db8h4fcrwabxvnm5pnb9mjyqwgprpkrd2vw5lvwi";
 	}
         {
@@ -43,7 +43,7 @@ let
 	{
 	  name = "terraform";
 	  publisher = "HashiCorp";
-          version = "2.15.0";
+          version = "2.17.0";
           sha256 = "0bqf9ry0idqw61714dc6y1rh5js35mi14q19yqhiwayyfakwraq9";
 	}
 	{
@@ -55,13 +55,13 @@ let
         {
 	  name = "vscode-kubernetes-tools";
 	  publisher = "ms-kubernetes-tools";
-          version = "1.3.3";
+          version = "1.3.4";
           sha256 = "1w22wyqszizcmr6qw0d5hqg64455yphzjjq6w13izc2flpird1kl";
 	}
 	{
 	  name = "vscode-yaml";
 	  publisher = "redhat";
-          version = "0.23.0";
+          version = "1.2.2";
           sha256 = "0hdly0cxj13fs5q06nlcic3yhv6jq641q01y07sxl9xaprb0n2dm";
 	}
 	{
