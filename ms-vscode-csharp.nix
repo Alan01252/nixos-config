@@ -45,7 +45,7 @@ in
       name = "csharp";
       publisher = "ms-dotnettools";
       version = "1.23.16";
-      sha256 = "1609yxa6h5db8hknqz12f3l8wh71lfv8ngw1yzxs6smkxbfywvg4";
+      sha256 = "fM4vcSMi2tEjIox9Twh2sRiFhXgAeRwAM9to3vtcSqI=";
     };
 
     postInstall = ''

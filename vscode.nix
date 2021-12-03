@@ -14,7 +14,7 @@ let
 	  name = "vim";
 	  publisher = "vscodevim";
           version = "1.21.10";
-          sha256 = "1zw9q3jaypw5db8h4fcrwabxvnm5pnb9mjyqwgprpkrd2vw5lvwi";
+          sha256 = "NiwIS+Soux5cyyEXXI5CCuJBJCRtYD7hkN/VKVg9NTE=";
 	}
         {
 	  name = "python";
@@ -44,7 +44,7 @@ let
 	  name = "terraform";
 	  publisher = "HashiCorp";
           version = "2.17.0";
-          sha256 = "0bqf9ry0idqw61714dc6y1rh5js35mi14q19yqhiwayyfakwraq9";
+          sha256 = "IZlw1lYibbBw3rcSiWEKP8rObxnMCE1ppogwmigNgwE=";
 	}
 	{
 	  name = "code-spell-checker";
@@ -62,7 +62,7 @@ let
 	  name = "vscode-yaml";
 	  publisher = "redhat";
           version = "1.2.2";
-          sha256 = "0hdly0cxj13fs5q06nlcic3yhv6jq641q01y07sxl9xaprb0n2dm";
+          sha256 = "pjNe+0mppY+ionTHDP9lVVllWx6zyaStjxXTkXF3xBo=";
 	}
 	{
 	  name = "vscode-pylance";
