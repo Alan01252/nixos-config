@@ -8,7 +8,7 @@
     [ (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" "sdhci_pci" ];
+  boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usbhid" "sd_mod" "sdhci_pci" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
@@ -26,6 +26,26 @@
   fileSystems."/boot" =
     { device = "/dev/disk/by-uuid/2B2C-1220";
       fsType = "vfat";
+    };
+
+  fileSystems."/var/lib/docker/zfs/graph/53df62b03e5d5784e659b73d27eb8906823da7f7bbd1b0e695d85a1ba90f2c48" =
+    { device = "rpool/root/nixos/53df62b03e5d5784e659b73d27eb8906823da7f7bbd1b0e695d85a1ba90f2c48";
+      fsType = "zfs";
+    };
+
+  fileSystems."/var/lib/docker/zfs/graph/fdf738f71552cd582a72f6c51fb1ad6f953fd75f1943c00efcd4e9280d71b3b3" =
+    { device = "rpool/root/nixos/fdf738f71552cd582a72f6c51fb1ad6f953fd75f1943c00efcd4e9280d71b3b3";
+      fsType = "zfs";
+    };
+
+  fileSystems."/var/lib/docker/zfs/graph/e53f8649076f00dfc48853217d169bc818698b099a559ae30a960469cb8652ba" =
+    { device = "rpool/root/nixos/e53f8649076f00dfc48853217d169bc818698b099a559ae30a960469cb8652ba";
+      fsType = "zfs";
+    };
+
+  fileSystems."/storage" =
+    { device = "storage";
+      fsType = "zfs";
     };
 
   swapDevices = [ ];
