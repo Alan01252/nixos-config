@@ -67,7 +67,7 @@ in {
   networking.interfaces.eno1.useDHCP = true;
   networking.interfaces.wlp0s20f3.useDHCP = true;
   networking.hostId = "089f9679";
-  networking.defaultGateway = "192.168.1.1";
+  networking.defaultGateway = "192.168.2.1";
 
    networking.extraHosts =
   ''
@@ -151,7 +151,6 @@ in {
      coreutils
      pythonWithPackages 
      lua
-     mysql-workbench
      unstable.strongswan
      xl2tpd
      gimp
