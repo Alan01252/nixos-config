@@ -133,9 +133,11 @@ in {
   environment.systemPackages = with pkgs; [
      wget vim unstable.google-chrome fwupd efivar systool 
      ubridge
-     go gopls go-outline
+     gopls go-outline
+     go_1_17
      silver-searcher
      zip p7zip git git-lfs qemu gnumake gcc wireshark libpcap telnet htop
+     git-quick-stats
      gnumake gcc wireshark libpcap tigervnc telnet htop
      alacritty xsel i3blocks dmenu 
      unstable.dotnet-sdk_6
