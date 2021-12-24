@@ -2,7 +2,7 @@
 
 
    inputs = {
-      nixpkgs.url = "nixpkgs/nixos-21.05";
+      nixpkgs.url = "nixpkgs/nixos-21.11";
       nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
   };
 
