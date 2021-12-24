@@ -56,7 +56,7 @@ let
 	  name = "vscode-kubernetes-tools";
 	  publisher = "ms-kubernetes-tools";
           version = "1.3.4";
-          sha256 = "1w22wyqszizcmr6qw0d5hqg64455yphzjjq6w13izc2flpird1kl";
+          sha256 = "LXcIwE+sL7ZJU6dsJkrko4CzQb6T+FcgL6OC+iQtVEU=";
 	}
 	{
 	  name = "vscode-yaml";
