@@ -53,7 +53,6 @@ in {
   boot.supportedFilesystems = [ "zfs" ];
   boot.kernelParams = [ "nohibernate" ];
   boot.loader.grub.copyKernels = true;
-  boot.zfs.enableUnstable = true;
 
   networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   networking.wireless.interfaces = ["wlp0s20f3"];
@@ -77,7 +76,7 @@ in {
   networking.nameservers = ["127.0.0.1"];
   networking.dhcpcd.extraConfig = "nohook resolv.conf";
  
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages_5_14;
 
 
   system.userActivationScripts = {
