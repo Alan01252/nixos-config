@@ -71,12 +71,11 @@ in {
 
    networking.extraHosts =
   ''
-     192.168.1.15 macos
      127.0.0.99 docker.internal.speik.net
      127.0.0.99 nexus.internal.speik.net
   '';
-  networking.nameservers = ["127.0.0.1"];
-  networking.dhcpcd.extraConfig = "nohook resolv.conf";
+  #networking.nameservers = ["127.0.0.1"];
+  #networking.dhcpcd.extraConfig = "nohook resolv.conf";
  
 
 
@@ -383,7 +382,7 @@ in {
   programs.adb.enable = true;
 
   services.dnscrypt-proxy2 = {
-    enable = true;
+    enable = false;
     settings = {
       listen_addresses = [ "0.0.0.0:53" ];
       ipv6_servers = true;
