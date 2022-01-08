@@ -100,6 +100,12 @@ let
           version = "0.28.1";
           sha256 = "1fiycdss64izdxk7gnp1gx6bdl040cr5lk17cnb2p30qpgpjv0gz";
 	}
+	{
+	  name = "ionide-fsharp";
+	  publisher = "ionide";
+          version = "5.10.2";
+          sha256 = "bYbbJMhEcmOXxcUSY6qVJtXx2IjgAzLg3ie1SHsuHDE=";
+	}
 
      ];
      vscode = pkgs.vscode-with-extensions.override {
