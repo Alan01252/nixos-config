@@ -13,7 +13,6 @@ assert builtins.elem type [ "aspnetcore" "runtime" "sdk"];
 , libuuid
 , zlib
 , curl
-, lttng-ust_2_12
 }:
 
 let
@@ -46,14 +45,11 @@ in stdenv.mkDerivation rec {
   rpath = lib.makeLibraryPath ([
     stdenv.cc.cc
     zlib
-
     curl
     icu
     libunwind
     libuuid
     openssl
-  ] ++ lib.optionals stdenv.isLinux [
-    lttng-ust_2_12
   ]);
 
   src = fetchurl {
