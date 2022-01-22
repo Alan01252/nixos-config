@@ -6,7 +6,6 @@
 
 let
 
-
     pureZshPrompt = pkgs.fetchgit {
       url = "https://github.com/sindresorhus/pure";
       rev = "e7036c43487fedf608a988dde54dd1d4c0d96823";
@@ -21,13 +20,19 @@ let
    	 pkgs = pkgs.unstable;
     };
 
-    callPk = pkgs.callPackage;
-   
+
+    callPk = pkgs.callPackage ;
+
 
     flux = import ./flux.nix {
 	inherit pkgs;
     };
 
+   dotnet = import ./overlays/dotnet/default.nix {
+         callPackage = callPk;
+   };
+
+   dotnetCombined = with dotnet; combinePackages [ sdk_6_0 runtime_6_0 ];
 
 
 
@@ -46,9 +51,10 @@ in {
      ./webhook.nix
    ];
 
-  nixpkgs.overlays = [ 
-     (import ./overlays/default.nix)
-  ];
+
+  #nixpkgs.overlays = [ 
+  #   (import ./overlays/default.nix)
+  #];
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.supportedFilesystems = [ "zfs" ];
@@ -142,10 +148,12 @@ in {
      git-quick-stats
      gnumake gcc wireshark libpcap tigervnc telnet htop
      alacritty xsel i3blocks dmenu 
-     unstable.dotnet-sdk_6
+     dotnetCombined
+     unstable.azuredatastudio
      unstable.mono
      unstable.msbuild
      xclip maim
+     libkrb5
      vscodeWithExtensions unstable.omnisharp-roslyn 
      coreutils
      pythonWithPackages 
@@ -198,7 +206,7 @@ in {
      bfg-repo-cleaner
      zoxide
      fzf
-     bluez
+     bluezFull
      bluez-tools
      keepass
    ];
@@ -296,15 +304,12 @@ in {
   # Enable sound.
   sound.enable = true;
   hardware.pulseaudio.enable = true;
+  hardware.sane.enable = true;
   hardware.opengl.driSupport32Bit = true;
   hardware.opengl.extraPackages32 = with pkgs.pkgsi686Linux; [ libva ];
   hardware.pulseaudio.support32Bit = true;
   hardware.bluetooth.enable = true;
-  hardware.bluetooth.settings = {
-    General = {
-     ControllerMode = "dual";
-    };
-  };
+  hardware.bluetooth.powerOnBoot = true;
 	
 
   fonts.fonts = with pkgs; [
@@ -325,7 +330,7 @@ in {
      isNormalUser = true;
      uid = 1000;
      home = "/home/alan";
-     extraGroups = [ "wheel" "networkmanager" "docker" "ubridge" "adbusers"];
+     extraGroups = [ "wheel" "networkmanager" "docker" "ubridge" "adbusers" "scanner" "lp"];
      shell = pkgs.zsh;
      subUidRanges = [{ startUid = 100000; count = 65536; }];
      subGidRanges = [{ startGid = 100000; count = 65536; }];
