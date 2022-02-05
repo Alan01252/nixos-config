@@ -149,6 +149,7 @@ in {
      gnumake gcc wireshark libpcap tigervnc telnet htop
      alacritty xsel i3blocks dmenu 
      dotnetCombined
+     pandoc
      unstable.azuredatastudio
      unstable.mono
      unstable.msbuild
@@ -310,6 +311,7 @@ in {
   hardware.pulseaudio.support32Bit = true;
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = true;
+  hardware.enableAllFirmware = true;
 	
 
   fonts.fonts = with pkgs; [
@@ -360,8 +362,21 @@ in {
 
   virtualisation.oci-containers = {
     containers = {
+
+      mi-scales = {
+        image = "lolouk44/xiaomi-mi-scale:latest";
+        volumes = [
+          "/home/alan/Workspace/alan/mi-scale/data:/data/"
+        ];
+        extraOptions = [
+           "--network=host"
+           "--cap-add=NET_ADMIN"
+           "--privileged"
+        ];
+      };
+
       room-assistant = {
-        image = "mkerix/room-assistant";
+        image = "alan01252/room-assistant-fork:latest";
         volumes = [
           "/var/run/dbus/:/var/run/dbus/"
           "/home/alan/Workspace/alan/room-assistant:/room-assistant/config/"
