@@ -366,11 +366,13 @@ in {
       mi-scales = {
         image = "lolouk44/xiaomi-mi-scale:latest";
         volumes = [
+          "/var/run/dbus/:/var/run/dbus/"
           "/home/alan/Workspace/alan/mi-scale/data:/data/"
         ];
         extraOptions = [
            "--network=host"
            "--cap-add=NET_ADMIN"
+           "--cap-add=NET_RAW"
            "--privileged"
         ];
       };
