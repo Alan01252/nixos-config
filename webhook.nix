@@ -102,9 +102,11 @@
 
   systemd.services.webhook = {
     enable = true;
+    description = "webhook";
 
     serviceConfig = {
       ExecStart = "${pkgs.webhook}/bin/webhook -hooks /etc/webhook.conf -verbose";
     };
+    wantedBy = [ "multi-user.target" ];
   };
 }

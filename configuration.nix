@@ -70,7 +70,7 @@ in {
   # Per-interface useDHCP will be mandatory in the future, so this generated config
   # replicates the default behaviour.
   networking.useDHCP = false;
-  networking.interfaces.eno1.useDHCP = true;
+  networking.interfaces.eno1.useDHCP = false;
   networking.interfaces.wlp0s20f3.useDHCP = true;
   networking.hostId = "089f9679";
   networking.defaultGateway = "192.168.2.1";
@@ -155,7 +155,8 @@ in {
      unstable.msbuild
      xclip maim
      libkrb5
-     vscodeWithExtensions unstable.omnisharp-roslyn 
+     vscodeWithExtensions
+     unstable.omnisharp-roslyn 
      coreutils
      pythonWithPackages 
      lua
@@ -210,6 +211,7 @@ in {
      bluezFull
      bluez-tools
      keepass
+     unstable.terraform-ls
    ];
 
    security.wrappers.ubridge = {

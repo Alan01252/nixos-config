@@ -6,7 +6,6 @@ let
 
   extensions = (with pkgs.vscode-extensions; [
     ms-vscode-csharp
-    ms-vscode.cpptools
     ms-vscode-remote.remote-ssh
   ])
   ++
@@ -20,7 +19,7 @@ let
     {
       name = "remote-containers";
       publisher = "ms-vscode-remote";
-      version = "0.212.0";
+      version = "0.226.0";
       sha256 = "w7vQRwhqTXHnQDRVNUCMBdX/rP96IhL9ejn0uSTzyyw=";
     }
     {
