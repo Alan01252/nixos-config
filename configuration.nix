@@ -198,7 +198,7 @@ in {
      killall
      file
      unstable.sops
-     unstable.terraform_0_15
+     unstable.terraform
      aws-iam-authenticator
      unstable.awscli2
      pass
@@ -212,6 +212,7 @@ in {
      bluez-tools
      keepass
      unstable.terraform-ls
+     tetex
    ];
 
    security.wrappers.ubridge = {
