@@ -73,7 +73,7 @@ in {
   networking.interfaces.eno1.useDHCP = false;
   networking.interfaces.wlp0s20f3.useDHCP = true;
   networking.hostId = "089f9679";
-  networking.defaultGateway = "192.168.2.1";
+  networking.defaultGateway = "192.168.1.1";
 
    networking.extraHosts =
   ''
@@ -213,6 +213,7 @@ in {
      keepass
      unstable.terraform-ls
      tetex
+     unstable.curlHTTP3
    ];
 
    security.wrappers.ubridge = {
@@ -331,6 +332,7 @@ in {
 
  
   # Define a user account. Don't forget to set a password with ‘passwd’.
+  # 
   users.users.alan = {
      isNormalUser = true;
      uid = 1000;
@@ -407,12 +409,13 @@ in {
   programs.adb.enable = true;
 
   services.dnscrypt-proxy2 = {
-    enable = false;
+    enable = true;
     settings = {
       listen_addresses = [ "0.0.0.0:53" ];
       ipv6_servers = true;
       block_ipv6= true;
       require_dnssec = true;
+      #cloaking_rules = "/home/alan/cloaking-rules.txt";
 
       sources.public-resolvers = {
         urls = [
