@@ -211,9 +211,10 @@ in {
      bluezFull
      bluez-tools
      keepass
-     unstable.terraform-ls
+     terraform-ls
      tetex
      unstable.curlHTTP3
+     unstable.bcc
    ];
 
    security.wrappers.ubridge = {
@@ -337,7 +338,7 @@ in {
      isNormalUser = true;
      uid = 1000;
      home = "/home/alan";
-     extraGroups = [ "wheel" "networkmanager" "docker" "ubridge" "adbusers" "scanner" "lp"];
+     extraGroups = [ "wheel" "networkmanager" "docker" "ubridge" "adbusers" "scanner" "lp" "dialout"];
      shell = pkgs.zsh;
      subUidRanges = [{ startUid = 100000; count = 65536; }];
      subGidRanges = [{ startGid = 100000; count = 65536; }];

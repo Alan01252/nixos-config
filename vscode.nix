@@ -20,7 +20,7 @@ let
       name = "remote-containers";
       publisher = "ms-vscode-remote";
       version = "0.226.0";
-      sha256 = "w7vQRwhqTXHnQDRVNUCMBdX/rP96IhL9ejn0uSTzyyw=";
+      sha256 = "6GGU89kqD/7hd/zp+ZfeBn6CbkUirsNS5opL9Nd+OqQ=";
     }
     {
       name = "python";
