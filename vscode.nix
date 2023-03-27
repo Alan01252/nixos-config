@@ -84,12 +84,6 @@ let
       sha256 = "1579h6zfrws55xh7cz4lg7p5j7r5awrlhk7b49mr3781q980zqbr";
     }
     {
-      name = "nix-env-selector";
-      publisher = "arrterian";
-      version = "1.0.7";
-      sha256 = "0mralimyzhyp4x9q98x3ck64ifbjqdp8cxcami7clvdvkmf8hxhf";
-    }
-    {
       name = "jinjahtml";
       publisher = "samuelcolvin";
       version = "0.16.0";
@@ -113,12 +107,12 @@ let
       version = "0.28.1";
       sha256 = "1fiycdss64izdxk7gnp1gx6bdl040cr5lk17cnb2p30qpgpjv0gz";
     }
-    #{
-    #  name = "ionide-fsharp";
-    #  publisher = "ionide";
-    #  version = "5.10.2";
-    #  sha256 = "bYbbJMhEcmOXxcUSY6qVJtXx2IjgAzLg3ie1SHsuHDE=";
-    #}
+    {
+      name = "direnv";
+      publisher = "mkhl";
+      version = "0.10.1";
+      sha256 = "0m89sx1qqdkwa9pfmd9b11lp8z0dqpi6jn27js5q4ymscyg41bqd";
+    }
 
   ];
   vscode = pkgs.vscode-with-extensions.override {

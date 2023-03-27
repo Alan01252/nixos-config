@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, channels, ... }:
 
 let
 
@@ -45,10 +45,12 @@ in {
    '';
  };
   
+ disabledModules = [ "services/networking/tailscale.nix" ];
  imports =
    [ # Include the results of the hardware scan.
      ./hardware-configuration.nix
      ./webhook.nix
+     "${channels.nixpkgs-unstable}/nixos/modules/services/networking/tailscale.nix"
    ];
 
 
@@ -140,13 +142,14 @@ in {
 
   environment.systemPackages = with pkgs; [
      wget vim unstable.google-chrome fwupd efivar systool 
+     direnv
      ubridge
      gopls go-outline
      go_1_17
      silver-searcher
      zip p7zip git git-lfs qemu gnumake gcc wireshark libpcap telnet htop
      git-quick-stats
-     gnumake gcc wireshark libpcap tigervnc telnet htop
+     gnumake gcc libpcap tigervnc telnet htop
      alacritty xsel i3blocks dmenu 
      dotnetCombined
      pandoc
@@ -171,6 +174,7 @@ in {
      unstable.dbeaver
      unstable.velero
      lvm2
+     arp-scan
      icedtea_web
      unstable.podman unstable.runc unstable.conmon unstable.slirp4netns unstable.fuse-overlayfs cni-plugins
      steam
@@ -215,7 +219,10 @@ in {
      tetex
      unstable.curlHTTP3
      unstable.bcc
+     unstable.tailscale
    ];
+
+   services.tailscale.enable=true;
 
    security.wrappers.ubridge = {
     source  = "${pkgs.ubridge.out}/bin/ubridge";
@@ -264,7 +271,8 @@ in {
   environment.pathsToLink = [ "/libexec" ];
   environment.etc.hosts.mode = "0644";
 
-  
+  programs.wireshark.enable = true;
+
   programs.tmux = {
     enable = true;
     clock24 = true;
@@ -416,7 +424,8 @@ in {
       ipv6_servers = true;
       block_ipv6= true;
       require_dnssec = true;
-      #cloaking_rules = "/home/alan/cloaking-rules.txt";
+      #forwarding_rules = "/etc/dnscrypt-proxy/forwarding-rules.txt";
+      cloaking_rules = "/etc/dnscrypt-proxy/cloaking-rules.txt";
 
       sources.public-resolvers = {
         urls = [
@@ -432,6 +441,19 @@ in {
       #];
     };
   };
+
+  systemd.services.dnscrypt-proxy2.serviceConfig = {
+    ConfigurationDirectory = "dnscrypt-proxy";
+  };
+
+    security.wrappers.arp-scan = {
+      source  = "${pkgs.arp-scan.out}/bin/arp-scan";
+      capabilities = "cap_net_raw,cap_net_admin=eip";
+      owner = "alan";
+      group = "users";
+    };
+
+
 
 }
 

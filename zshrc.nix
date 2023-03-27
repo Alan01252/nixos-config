@@ -16,6 +16,7 @@ setopt EXTENDED_HISTORY
 alias history="fc -l -50" 
 if [ "$TMUX" = "" ]; then tmux; fi
 eval "$(zoxide init zsh)"
+eval "$(direnv hook zsh)" 
 xrandr --output DP-2 --auto --output DP-1 --auto --right-of DP-2
 PROMPT='$(kubeprompt -f default)'$PROMPT
 command -v flux >/dev/null && . <(flux completion zsh) && compdef _flux flux

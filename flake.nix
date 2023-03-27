@@ -2,7 +2,7 @@
 
 
    inputs = {
-      nixpkgs.url = "nixpkgs/nixos-21.11";
+      nixpkgs.url = "nixpkgs/nixos-22.11";
       nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
   };
 
@@ -18,6 +18,7 @@
   {
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
+      specialArgs.channels = { inherit nixpkgs nixpkgs-unstable; };
       modules = [ 
          ({
            nixpkgs = {
