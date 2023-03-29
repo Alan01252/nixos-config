@@ -3,6 +3,7 @@ env:
   TERM: screen-256color
 
 window:
+  opacity: 1.0
   dimensions:
     columns: 0
     lines: 0
@@ -73,8 +74,6 @@ bell:
   animation: EaseOutExpo
   duration: 0
 
-# Background opacity
-background_opacity: 1.0
 
 mouse_bindings:
   - { mouse: Middle, action: PasteSelection }
