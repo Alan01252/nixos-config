@@ -25,7 +25,7 @@ let
     {
       name = "python";
       publisher = "ms-python";
-      version = "2021.9.1246542782";
+      version = "2023.7.10881020";
       sha256 = "105vj20749bck6ijdlf7hsg5nb82bi5pklf80l1s7fn4ajr2yk02";
     }
 
@@ -112,6 +112,12 @@ let
       publisher = "mkhl";
       version = "0.10.1";
       sha256 = "0m89sx1qqdkwa9pfmd9b11lp8z0dqpi6jn27js5q4ymscyg41bqd";
+    }
+    {
+      name = "shellcheck";
+      publisher = "timonwong";
+      version = "0.31.0";
+      sha256 = "sha256-aqWJ5gOsraDyZLGayjr8W9vi74n1FAqbmGMUqZQ9lPo=";
     }
 
   ];
