@@ -26,14 +26,7 @@ let
       name = "python";
       publisher = "ms-python";
       version = "2023.7.10881020";
-      sha256 = "105vj20749bck6ijdlf7hsg5nb82bi5pklf80l1s7fn4ajr2yk02";
-    }
-
-    {
-      name = "python";
-      publisher = "ms-python";
-      version = "2021.9.1246542782";
-      sha256 = "105vj20749bck6ijdlf7hsg5nb82bi5pklf80l1s7fn4ajr2yk02";
+      sha256 = "sha256-5NqgYonHbNFu6W/Ue68AXGJ7nAC98c8w8q3CVVbrygs=";
     }
     {
       name = "vscode-docker";
@@ -118,6 +111,12 @@ let
       publisher = "timonwong";
       version = "0.31.0";
       sha256 = "sha256-aqWJ5gOsraDyZLGayjr8W9vi74n1FAqbmGMUqZQ9lPo=";
+    }
+    {
+      name = "powershell";
+      publisher = "ms-vscode";
+      version = "2023.3.2";
+      sha256 = "sha256-0ueodXRwYnelSwP1MMbgHJFio41kVf656dg6Yro8+hE=";
     }
 
   ];
