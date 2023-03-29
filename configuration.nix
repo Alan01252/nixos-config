@@ -141,15 +141,15 @@ in {
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
-     wget vim unstable.google-chrome fwupd efivar systool 
+     wget vim unstable.google-chrome fwupd efivar sysfsutils
+     shellcheck
      direnv
      ubridge
      gopls go-outline
-     go_1_17
      silver-searcher
-     zip p7zip git git-lfs qemu gnumake gcc wireshark libpcap telnet htop
+     zip p7zip git git-lfs qemu gnumake gcc wireshark libpcap inetutils htop
      git-quick-stats
-     gnumake gcc libpcap tigervnc telnet htop
+     gnumake gcc libpcap tigervnc htop
      alacritty xsel i3blocks dmenu 
      dotnetCombined
      pandoc
@@ -186,8 +186,6 @@ in {
      tigervnc
      nixpkgs-fmt
      rofi
-     qt5Full
-     android-studio
      feh
      unstable.kubectl
      unstable.kustomize
@@ -334,9 +332,7 @@ in {
     liberation_ttf
     fira-code
     fira-code-symbols
-    mplus-outline-fonts
     dina-font
-    proggyfonts
   ];
 
  
@@ -363,7 +359,6 @@ in {
   virtualisation.docker = {
         enable = true;
         storageDriver = "zfs";
-	logDriver = "json-file";
   };
   systemd.services.docker.path = [ pkgs.zfs ];
   systemd.services.docker.environment = {
@@ -411,7 +406,6 @@ in {
 
   services.k3s ={
     enable = false;
-    docker = true;
     extraFlags = "--no-deploy traefik --no-deploy servicelb --no-deploy coredns --no-deploy metrics-server --no-flannel" ;
   };
 
