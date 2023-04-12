@@ -135,6 +135,11 @@ in {
   };
 
 
+  fileSystems."/storage" = {
+    device = "storage";
+    fsType = "zfs";
+  };
+
  
   time.timeZone = "Europe/London";
 
@@ -403,6 +408,8 @@ in {
   };
 
   services.nfs.server.enable = false;
+
+  services.zfs.autoScrub.enable = true;
 
   services.k3s ={
     enable = false;

@@ -118,6 +118,13 @@ let
       version = "2023.3.2";
       sha256 = "sha256-0ueodXRwYnelSwP1MMbgHJFio41kVf656dg6Yro8+hE=";
     }
+    {
+      name = "vetur";
+      publisher = "octref";
+      version = "0.37.3";
+      sha256 = "sha256-3hi1LOZto5AYaomB9ihkAt4j/mhkCDJ8Jqa16piwHIQ=";
+    }
+
 
   ];
   vscode = pkgs.vscode-with-extensions.override {
