@@ -14,6 +14,18 @@
 	config.allowUnfree = true;
       };
     };
+
+
+    openvpnOverlay = final: prev: {
+      openvpn = prev.openvpn.overrideAttrs (oldAttrs: {
+        version = "2.6.4";
+        buildInputs = oldAttrs.buildInputs ++ [ prev.libnl prev.libcap_ng prev.lz4 ];
+        src = prev.fetchurl {
+          url = "https://swupdate.openvpn.org/community/releases/openvpn-2.6.4.tar.gz";
+          sha256 = "NxoqMjqZp5KZubTKpKMbx7LN/2MjbmjUKfPuUOdfPdQ=";  # Remember to update this
+        };
+      });
+    };
   in
   {
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
@@ -22,7 +34,7 @@
       modules = [ 
          ({
            nixpkgs = {
-             overlays = [ unstableOverlay ];
+             overlays = [ unstableOverlay openvpnOverlay ];
              config.allowUnfree = true; 
            };
          })

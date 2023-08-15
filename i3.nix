@@ -171,6 +171,9 @@ bindsym $mod+Shift+v exec google-chrome-stable --proxy-server="socks5://macos:10
 bindsym $mod+Shift+i exec "maim -s | xclip -selection clipboard -t image/png"
 new_window 1pixel
 
+bindsym $mod+Ctrl+bracketleft exec /home/alan/bin/start-recording.sh
+
+
 for_window [class="xfreerdp"]   floating enable
 
 

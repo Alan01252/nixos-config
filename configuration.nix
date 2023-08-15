@@ -32,6 +32,8 @@ let
          callPackage = callPk;
    };
 
+
+
    dotnetCombined = with dotnet; combinePackages [ sdk_6_0 runtime_6_0 ];
 
 
@@ -55,7 +57,7 @@ in {
 
 
   #nixpkgs.overlays = [ 
-  #   (import ./overlays/default.nix)
+  #   (import /etc/nixos/overlays/openvpn.nix)
   #];
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -223,9 +225,18 @@ in {
      unstable.curlHTTP3
      unstable.bcc
      unstable.tailscale
+     byzanz
+     slop
+     arcanPackages.ffmpeg
+     iptables
    ];
 
    services.tailscale.enable=true;
+
+   services.udev.extraRules = ''
+     SUBSYSTEM=="usb",ATTRS{idVendor}=="1a6e",GROUP="dialout"
+     SUBSYSTEM=="usb",ATTRS{idVendor}=="18d1",GROUP="dialout"
+   '';
 
    security.wrappers.ubridge = {
     source  = "${pkgs.ubridge.out}/bin/ubridge";
@@ -391,19 +402,19 @@ in {
         ];
       };
 
-      room-assistant = {
-        image = "alan01252/room-assistant-fork:latest";
-        volumes = [
-          "/var/run/dbus/:/var/run/dbus/"
-          "/home/alan/Workspace/alan/room-assistant:/room-assistant/config/"
-        ];
-	cmd = ["--verbose"];
-        extraOptions = [ 
-           "--network=host"
-           "--cap-add=NET_ADMIN"
-           "--cap-add=NET_RAW"
-        ];
-      };
+      #room-assistant = {
+      #  image = "alan01252/room-assistant-fork:latest";
+      #  volumes = [
+      #    "/var/run/dbus/:/var/run/dbus/"
+      #    "/home/alan/Workspace/alan/room-assistant:/room-assistant/config/"
+      #  ];
+#	cmd = ["--verbose"];
+#        extraOptions = [ 
+#           "--network=host"
+#           "--cap-add=NET_ADMIN"
+#           "--cap-add=NET_RAW"
+#        ];
+#      };
     };
   };
 
@@ -418,6 +429,13 @@ in {
 
   programs.adb.enable = true;
 
+
+  services.gnome.gnome-keyring.enable = true;
+  services.dbus.packages = [ pkgs.gnome3.gnome-keyring ];
+  services.passSecretService.enable = true;
+  security.pam.services.sddm.enableGnomeKeyring = true;
+
+
   services.dnscrypt-proxy2 = {
     enable = true;
     settings = {
@@ -427,6 +445,7 @@ in {
       require_dnssec = true;
       #forwarding_rules = "/etc/dnscrypt-proxy/forwarding-rules.txt";
       cloaking_rules = "/etc/dnscrypt-proxy/cloaking-rules.txt";
+      server_names = ["nextdns-ultralow" "cloudflare"];
 
       sources.public-resolvers = {
         urls = [
@@ -446,6 +465,10 @@ in {
   systemd.services.dnscrypt-proxy2.serviceConfig = {
     ConfigurationDirectory = "dnscrypt-proxy";
   };
+
+   services.strongswan.enable = true;
+
+
 
     security.wrappers.arp-scan = {
       source  = "${pkgs.arp-scan.out}/bin/arp-scan";

@@ -103,8 +103,8 @@ let
     {
       name = "direnv";
       publisher = "mkhl";
-      version = "0.10.1";
-      sha256 = "0m89sx1qqdkwa9pfmd9b11lp8z0dqpi6jn27js5q4ymscyg41bqd";
+      version = "0.14.0";
+      sha256 = "T+bt6ku+zkqzP1gXNLcpjtFAevDRiSKnZaE7sM4pUOs=";
     }
     {
       name = "shellcheck";
@@ -124,8 +124,18 @@ let
       version = "0.37.3";
       sha256 = "sha256-3hi1LOZto5AYaomB9ihkAt4j/mhkCDJ8Jqa16piwHIQ=";
     }
-
-
+    {
+      name = "robotframework-lsp";
+      publisher = "robocorp";
+      version = "1.10.0";
+      sha256 = "sha256-aC+5uAalCi2NwtwCp3q3EDE5x0dRGlTUR1RBoE3K4Zw=";
+    }
+    {
+      name = "gitlab-workflow";
+      publisher = "Gitlab";
+      version = "3.62.0";
+      sha256 = "sha256-JxXBpnW0sRs7ae+fNeryvU6uJyKVbj/CIS8tJWsxDZw=";
+    }
   ];
   vscode = pkgs.vscode-with-extensions.override {
     vscodeExtensions = extensions;
