@@ -136,6 +136,18 @@ let
       version = "3.62.0";
       sha256 = "sha256-JxXBpnW0sRs7ae+fNeryvU6uJyKVbj/CIS8tJWsxDZw=";
     }
+    {
+      name = "vscode-expo-tools";
+      publisher = "Expo";
+      version = "1.0.7";
+      sha256 = "sha256-ghz8UyMYE+tO22graktz2q4msCDNoGtVbwc93rYxq9A=";
+    }
+    {
+      name = "vscode-sqlite";
+      publisher = "alexcvzz";
+      version = "0.14.1";
+      sha256 = "sha256-jOQkRgBkUwJupD+cRo/KRahFRs82X3K49DySw6GlU8U=";
+    }
   ];
   vscode = pkgs.vscode-with-extensions.override {
     vscodeExtensions = extensions;
