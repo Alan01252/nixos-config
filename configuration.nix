@@ -149,6 +149,7 @@ in {
 
   environment.systemPackages = with pkgs; [
      wget vim unstable.google-chrome fwupd efivar sysfsutils
+     unstable.firefox
      shellcheck
      direnv
      ubridge
@@ -189,7 +190,6 @@ in {
      vbetool
      xorg.xhost
      i3blocks
-     unstable.teams
      tigervnc
      nixpkgs-fmt
      rofi
@@ -208,8 +208,6 @@ in {
      file
      unstable.sops
      unstable.terraform
-     aws-iam-authenticator
-     unstable.awscli2
      pass
      pinentry
      pinentry-curses
@@ -229,6 +227,8 @@ in {
      slop
      arcanPackages.ffmpeg
      iptables
+     mongodb
+     sqlite
    ];
 
    services.tailscale.enable=true;
@@ -445,7 +445,7 @@ in {
       require_dnssec = true;
       #forwarding_rules = "/etc/dnscrypt-proxy/forwarding-rules.txt";
       cloaking_rules = "/etc/dnscrypt-proxy/cloaking-rules.txt";
-      server_names = ["nextdns-ultralow" "cloudflare"];
+      server_names = ["cloudflare"];
 
       sources.public-resolvers = {
         urls = [
