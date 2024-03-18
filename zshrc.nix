@@ -20,4 +20,10 @@ eval "$(direnv hook zsh)"
 xrandr --output DP-2 --auto --output DP-1 --auto --right-of DP-2
 PROMPT='$(kubeprompt -f default)'$PROMPT
 command -v flux >/dev/null && . <(flux completion zsh) && compdef _flux flux
+
+if [ -n "''${commands[fzf-share]}" ]; then
+        source "''$(fzf-share)/key-bindings.zsh"
+        source "''$(fzf-share)/completion.zsh"
+fi
+
 ''
