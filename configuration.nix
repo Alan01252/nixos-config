@@ -183,7 +183,6 @@ in {
      unstable.velero
      lvm2
      arp-scan
-     icedtea_web
      unstable.podman unstable.runc unstable.conmon unstable.slirp4netns unstable.fuse-overlayfs cni-plugins
      steam
      icu
@@ -215,7 +214,7 @@ in {
      bfg-repo-cleaner
      zoxide
      fzf
-     bluezFull
+     bluez
      bluez-tools
      keepass
      terraform-ls
@@ -227,7 +226,6 @@ in {
      slop
      arcanPackages.ffmpeg
      iptables
-     mongodb
      sqlite
    ];
 
@@ -341,7 +339,7 @@ in {
   hardware.enableAllFirmware = true;
 	
 
-  fonts.fonts = with pkgs; [
+  fonts.packages = with pkgs; [
     noto-fonts
     noto-fonts-cjk
     noto-fonts-emoji
@@ -388,19 +386,19 @@ in {
   virtualisation.oci-containers = {
     containers = {
 
-      mi-scales = {
-        image = "lolouk44/xiaomi-mi-scale:latest";
-        volumes = [
-          "/var/run/dbus/:/var/run/dbus/"
-          "/home/alan/Workspace/alan/mi-scale/data:/data/"
-        ];
-        extraOptions = [
-           "--network=host"
-           "--cap-add=NET_ADMIN"
-           "--cap-add=NET_RAW"
-           "--privileged"
-        ];
-      };
+      #mi-scales = {
+      #  image = "lolouk44/xiaomi-mi-scale:latest";
+     #   volumes = [
+     #     "/var/run/dbus/:/var/run/dbus/"
+     #     "/home/alan/Workspace/alan/mi-scale/data:/data/"
+     #   ];
+     #   extraOptions = [
+     #      "--network=host"
+     #      "--cap-add=NET_ADMIN"
+     #      "--cap-add=NET_RAW"
+     #      "--privileged"
+     #   ];
+     # };
 
       #room-assistant = {
       #  image = "alan01252/room-assistant-fork:latest";
