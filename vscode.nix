@@ -148,6 +148,18 @@ let
       version = "0.14.1";
       sha256 = "sha256-jOQkRgBkUwJupD+cRo/KRahFRs82X3K49DySw6GlU8U=";
     }
+    {
+      name = "platformio-ide";
+      publisher = "platformio";
+      version = "3.3.3";
+      sha256 = "sha256-d8kwQVoG/MOujmvMaX6Y0wl85L2PNdv2EnqTZKo8pGk=";
+    }
+    {
+      name = "cpptools";
+      publisher = "ms-vscode";
+      version = "1.20.5";
+      sha256 = "sha256-tCN8+vRItvMf93XoZMZc2CcrKHjXMBT/4RfGV6JFKsg=";
+    }
   ];
   vscode = pkgs.vscode-with-extensions.override {
     vscodeExtensions = extensions;

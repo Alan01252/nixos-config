@@ -28,14 +28,6 @@ let
 	inherit pkgs;
     };
 
-   dotnet = import ./overlays/dotnet/default.nix {
-         callPackage = callPk;
-   };
-
-
-
-   dotnetCombined = with dotnet; combinePackages [ sdk_6_0 runtime_6_0 ];
-
 
 
 in {
@@ -51,7 +43,7 @@ in {
  imports =
    [ # Include the results of the hardware scan.
      ./hardware-configuration.nix
-     ./webhook.nix
+     #./webhook.nix
      "${channels.nixpkgs-unstable}/nixos/modules/services/networking/tailscale.nix"
    ];
 
@@ -63,6 +55,7 @@ in {
   boot.loader.efi.canTouchEfiVariables = true;
   boot.supportedFilesystems = [ "zfs" ];
   boot.kernelParams = [ "nohibernate" ];
+  boot.extraModulePackages = [ pkgs.linuxKernel.packages.linux_6_6.v4l2loopback ];
   boot.loader.grub.copyKernels = true;
   boot.kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
 
@@ -148,6 +141,11 @@ in {
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
+     nginx
+     qt5.full
+     pkg-config
+     libusb1.dev
+     pkgs.linuxKernel.packages.linux_6_6.v4l2loopback
      wget vim unstable.google-chrome fwupd efivar sysfsutils
      unstable.firefox
      shellcheck
@@ -158,15 +156,13 @@ in {
      zip p7zip git git-lfs qemu gnumake gcc wireshark libpcap inetutils htop
      git-quick-stats
      gnumake gcc libpcap tigervnc htop
+     unstable.ghostty
      alacritty xsel i3blocks dmenu 
-     dotnetCombined
      pandoc
-     unstable.azuredatastudio
      unstable.mono
      unstable.msbuild
      xclip maim
      libkrb5
-     vscodeWithExtensions
      unstable.omnisharp-roslyn 
      coreutils
      pythonWithPackages 
@@ -179,7 +175,6 @@ in {
      openssl
      libpcap
      openvpn
-     unstable.dbeaver
      unstable.velero
      lvm2
      arp-scan
@@ -194,6 +189,7 @@ in {
      rofi
      feh
      unstable.kubectl
+     unstable.ngrok
      unstable.kustomize
      kubectx
      flux
@@ -227,6 +223,7 @@ in {
      arcanPackages.ffmpeg
      iptables
      sqlite
+     gettext
    ];
 
    services.tailscale.enable=true;
@@ -234,6 +231,11 @@ in {
    services.udev.extraRules = ''
      SUBSYSTEM=="usb",ATTRS{idVendor}=="1a6e",GROUP="dialout"
      SUBSYSTEM=="usb",ATTRS{idVendor}=="18d1",GROUP="dialout"
+     SUBSYSTEM=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="df11", MODE="0664", GROUP="plugdev"
+     SUBSYSTEM=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="5740", MODE="0664", GROUP="plugdev"
+     SUBSYSTEM=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="3754", MODE="0664", GROUP="plugdev"
+     ATTRS{idVendor}=="0483", MODE="0666", ENV{ID_MM_DEVICE_IGNORE}="1", ENV{ID_MM_PORT_IGNORE}="1"
+     ATTRS{idVendor}=="0483", ATTRS{idProduct}=="5740", MODE="0666", ENV{ID_MM_DEVICE_IGNORE}="1", ENV{ID_MM_PORT_IGNORE}="1"
    '';
 
    security.wrappers.ubridge = {
@@ -352,14 +354,16 @@ in {
  
   # Define a user account. Don't forget to set a password with ‘passwd’.
   # 
+  users.groups.plugdev = {};
   users.users.alan = {
      isNormalUser = true;
      uid = 1000;
      home = "/home/alan";
-     extraGroups = [ "wheel" "networkmanager" "docker" "ubridge" "adbusers" "scanner" "lp" "dialout"];
+     extraGroups = [ "wheel" "networkmanager" "docker" "ubridge" "adbusers" "scanner" "lp" "dialout" "plugdev" ];
      shell = pkgs.zsh;
      subUidRanges = [{ startUid = 100000; count = 65536; }];
      subGidRanges = [{ startGid = 100000; count = 65536; }];
+     packages = [ vscodeWithExtensions ];
    };
 
 
