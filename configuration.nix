@@ -2,65 +2,93 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, channels, ... }:
+{ lib, config, pkgs, channels, ... }:
 
 let
 
-    pureZshPrompt = pkgs.fetchgit {
-      url = "https://github.com/sindresorhus/pure";
-      rev = "e7036c43487fedf608a988dde54dd1d4c0d96823";
-      sha256 = "10mdk4dn2azzrhymx0ghl8v668ydy6mz5i797nmbl2ijx9hlqb3v";
-    };
-
-    vscodeWithExtensions = import ./vscode.nix { 
-   	 pkgs = pkgs.unstable;
-    };
-
-    pythonWithPackages = import ./python.nix { 
-   	 pkgs = pkgs.unstable;
-    };
+  allowAlanConfContent = pkgs.writeText "90-allow-alan.conf" ''
+    <!DOCTYPE busconfig PUBLIC "-//freedesktop//DTD D-Bus Bus Configuration 1.0//EN"
+      "http://www.freedesktop.org/standards/dbus/1.0/busconfig.dtd">
+    <busconfig>
+      <policy user="alan">
 
 
-    callPk = pkgs.callPackage ;
+    <allow send_destination="org.freedesktop.login1"
+               send_interface="org.freedesktop.login1.Manager"
+               send_member="PrepareForSleep"
+               send_type="signal"/>
 
+ <allow receive_sender="org.freedesktop.login1"
+             receive_interface="org.freedesktop.login1.Manager"
+             receive_member="PrepareForSleep"/>
+      </policy>
+    </busconfig>
+  '';
 
-    flux = import ./flux.nix {
-	inherit pkgs;
-    };
+  allowAlanDbusPackage = pkgs.linkFarm "alan-dbus-policy" [
+    {
+      # This path needs to match what services.dbus.packages looks for:
+      # <pkg>/etc/dbus-1/system.d/<filename>
+      name = "etc/dbus-1/system.d/90-allow-alan.conf";
+      # This points to the actual file content created by writeText
+      path = allowAlanConfContent;
+    }
+  ];
 
+  pureZshPrompt = pkgs.fetchgit {
+    url = "https://github.com/sindresorhus/pure";
+    rev = "e7036c43487fedf608a988dde54dd1d4c0d96823";
+    sha256 = "10mdk4dn2azzrhymx0ghl8v668ydy6mz5i797nmbl2ijx9hlqb3v";
+  };
 
+  vscodeWithExtensions = import ./vscode.nix {
+    pkgs = pkgs.unstable;
+  };
+
+  pythonWithPackages = import ./python.nix {
+    pkgs = pkgs.unstable;
+  };
+
+  #geminiOverlay = import ./overlays/gemini-cli.nix;
+
+  callPk = pkgs.callPackage;
 
 in {
 
- nix = {
-   package = pkgs.nixFlakes;
-   extraOptions = ''
-     experimental-features = nix-command flakes
-   '';
- };
-  
- disabledModules = [ "services/networking/tailscale.nix" ];
- imports =
-   [ # Include the results of the hardware scan.
-     ./hardware-configuration.nix
-     #./webhook.nix
-     "${channels.nixpkgs-unstable}/nixos/modules/services/networking/tailscale.nix"
-   ];
+  nixpkgs.config = {
+    allowUnfree = true;
+  };
+
+  # nixpkgs.overlays = [ geminiOverlay ];
+
+  nix = {
+    package = pkgs.nixVersions.stable;
+    extraOptions = ''
+      experimental-features = nix-command flakes
+    '';
+    settings."download-buffer-size" = 268435456; # 256 MiB
+  };
+
+  disabledModules = [ "services/networking/tailscale.nix" ];
 
 
-  #nixpkgs.overlays = [ 
-  #   (import /etc/nixos/overlays/openvpn.nix)
-  #];
+  imports =
+    [ # Include the results of the hardware scan.
+      ./hardware-configuration.nix
+      #./webhook.nix
+      "${channels.nixpkgs-unstable}/nixos/modules/services/networking/tailscale.nix"
+    ];
+
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.supportedFilesystems = [ "zfs" ];
+
   boot.kernelParams = [ "nohibernate" ];
-  boot.extraModulePackages = [ pkgs.linuxKernel.packages.linux_6_6.v4l2loopback ];
+  boot.kernelModules = [ "vivid" ];
   boot.loader.grub.copyKernels = true;
-  boot.kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
 
   networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-  networking.wireless.interfaces = ["wlp0s20f3"];
+  networking.wireless.interfaces = [ "wlp0s20f3" ];
   networking.resolvconf.dnsExtensionMechanism = false;
 
   # The global useDHCP flag is deprecated, therefore explicitly set to false here.
@@ -72,19 +100,17 @@ in {
   networking.hostId = "089f9679";
   networking.defaultGateway = "192.168.1.1";
 
-   networking.extraHosts =
-  ''
-     127.0.0.99 docker.internal.speik.net
-     127.0.0.99 nexus.internal.speik.net
-  '';
+  networking.extraHosts =
+    ''
+      127.0.0.99 docker.internal.speik.net
+      127.0.0.99 nexus.internal.speik.net
+    '';
   #networking.nameservers = ["127.0.0.1"];
   #networking.dhcpcd.extraConfig = "nohook resolv.conf";
- 
-
 
   system.userActivationScripts = {
-   extraUserActivation = {
-       text = ''
+    extraUserActivation = {
+      text = ''
         ln -sfn /etc/per-user/alacritty ~/.config/
         ln -sfn /etc/per-user/i3 ~/.config/
         ln -sfn /etc/per-user/i3blocks/i3blocks.conf ~/.i3blocks.conf
@@ -98,164 +124,156 @@ in {
     };
   };
 
-
   hardware.enableRedistributableFirmware = true;
   hardware.cpu.intel.updateMicrocode = true;
-
 
   # Enable the X11 windowing system.
   services.xserver = {
     enable = true;
-    layout = "gb";
+    xkb.layout = "gb";
   };
 
-  services.xserver.displayManager.sddm.enable = true;
-  services.xserver.displayManager.defaultSession = "none+i3";
-  services.xserver.displayManager.sddm.theme = "${(pkgs.fetchFromGitHub {
+  services.displayManager.sddm.enable = true;
+  services.displayManager.defaultSession = "none+i3";
+  services.displayManager.sddm.theme = "${(pkgs.fetchFromGitHub {
     owner = "MarianArlt";
     repo = "sddm-sugar-dark";
     rev = "v1.2";
     sha256 = "0gx0am7vq1ywaw2rm1p015x90b75ccqxnb1sz3wy8yjl27v82yhb";
   })}";
-  services.xserver.desktopManager.wallpaper= {
-	mode = "scale";
-  	combineScreens = false;
+  services.xserver.desktopManager.wallpaper = {
+    mode = "scale";
+    combineScreens = false;
   };
 
   services.xserver.windowManager.i3 = {
     enable = true;
     extraPackages = with pkgs; [
-        i3blocks
-      ];
+      i3blocks
+    ];
   };
-
 
   fileSystems."/storage" = {
     device = "storage";
     fsType = "zfs";
   };
 
- 
   time.timeZone = "Europe/London";
 
-  nixpkgs.config.allowUnfree = true;
-
   environment.systemPackages = with pkgs; [
-     nginx
-     qt5.full
-     pkg-config
-     libusb1.dev
-     pkgs.linuxKernel.packages.linux_6_6.v4l2loopback
-     wget vim unstable.google-chrome fwupd efivar sysfsutils
-     unstable.firefox
-     shellcheck
-     direnv
-     ubridge
-     gopls go-outline
-     silver-searcher
-     zip p7zip git git-lfs qemu gnumake gcc wireshark libpcap inetutils htop
-     git-quick-stats
-     gnumake gcc libpcap tigervnc htop
-     unstable.ghostty
-     alacritty xsel i3blocks dmenu 
-     pandoc
-     unstable.mono
-     unstable.msbuild
-     xclip maim
-     libkrb5
-     unstable.omnisharp-roslyn 
-     coreutils
-     pythonWithPackages 
-     lua
-     unstable.strongswan
-     xl2tpd
-     gimp
-     nbd
-     pcmanfm
-     openssl
-     libpcap
-     openvpn
-     unstable.velero
-     lvm2
-     arp-scan
-     unstable.podman unstable.runc unstable.conmon unstable.slirp4netns unstable.fuse-overlayfs cni-plugins
-     steam
-     icu
-     vbetool
-     xorg.xhost
-     i3blocks
-     tigervnc
-     nixpkgs-fmt
-     rofi
-     feh
-     unstable.kubectl
-     unstable.ngrok
-     unstable.kustomize
-     kubectx
-     flux
-     unstable.age
-     unstable.kubeprompt
-     unstable.kind
-     freerdp
-     unstable.packer
-     bind
-     killall
-     file
-     unstable.sops
-     unstable.terraform
-     pass
-     pinentry
-     pinentry-curses
-     ncdu
-     bfg-repo-cleaner
-     zoxide
-     fzf
-     bluez
-     bluez-tools
-     keepass
-     terraform-ls
-     tetex
-     unstable.curlHTTP3
-     unstable.bcc
-     unstable.tailscale
-     byzanz
-     slop
-     arcanPackages.ffmpeg
-     iptables
-     sqlite
-     gettext
-   ];
+    claudeDesktopFhs
+    unstable.gemini-cli
+    nginx
+    nixfmt-rfc-style
+    qt5.full
+    pkg-config
+    libusb1.dev
+    wget vim unstable.google-chrome fwupd efivar sysfsutils ripgrep
+    unstable.step-cli
+    unstable.firefox
+    shellcheck
+    direnv
+    ubridge
+    gopls go-outline
+    silver-searcher
+    zip p7zip git git-lfs qemu gnumake gcc wireshark libpcap inetutils htop
+    git-quick-stats
+    gnumake gcc libpcap tigervnc htop
+    unstable.ghostty
+    alacritty xsel autocutsel i3blocks dmenu
+    pandoc
+    unstable.mono
+    unstable.msbuild
+    xclip maim
+    libkrb5
+    coreutils
+    pythonWithPackages
+    lua
+    unstable.strongswan
+    xl2tpd
+    gimp
+    nbd
+    pcmanfm
+    openssl
+    libpcap
+    openvpn
+    unstable.velero
+    lvm2
+    arp-scan
+    unstable.podman unstable.runc unstable.conmon unstable.slirp4netns unstable.fuse-overlayfs cni-plugins
+    steam
+    icu
+    xorg.xhost
+    tigervnc
+    nixpkgs-fmt
+    rofi
+    feh
+    unstable.ngrok
+    flux
+    unstable.age
+    freerdp
+    unstable.packer
+    bind
+    killall
+    file
+    unstable.sops
+    unstable.terraform
+    pass
+    pinentry
+    pinentry-curses
+    ncdu
+    bfg-repo-cleaner
+    zoxide
+    fzf
+    bluez
+    bluez-tools
+    keepass
+    terraform-ls
+    tetex
+    unstable.bcc
+    unstable.tailscale
+    byzanz
+    slop
+    ffmpeg-full
+    iptables
+    sqlite
+    gettext
+    awscli2
+    ssm-session-manager-plugin
+    unstable.codex
+    dunst
+  ];
 
-   services.tailscale.enable=true;
+  services.tailscale.enable = true;
 
-   services.udev.extraRules = ''
-     SUBSYSTEM=="usb",ATTRS{idVendor}=="1a6e",GROUP="dialout"
-     SUBSYSTEM=="usb",ATTRS{idVendor}=="18d1",GROUP="dialout"
-     SUBSYSTEM=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="df11", MODE="0664", GROUP="plugdev"
-     SUBSYSTEM=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="5740", MODE="0664", GROUP="plugdev"
-     SUBSYSTEM=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="3754", MODE="0664", GROUP="plugdev"
-     ATTRS{idVendor}=="0483", MODE="0666", ENV{ID_MM_DEVICE_IGNORE}="1", ENV{ID_MM_PORT_IGNORE}="1"
-     ATTRS{idVendor}=="0483", ATTRS{idProduct}=="5740", MODE="0666", ENV{ID_MM_DEVICE_IGNORE}="1", ENV{ID_MM_PORT_IGNORE}="1"
-   '';
+  services.udev.extraRules = ''
+    SUBSYSTEM=="usb",ATTRS{idVendor}=="1a6e",GROUP="dialout"
+    SUBSYSTEM=="usb",ATTRS{idVendor}=="18d1",GROUP="dialout"
+    SUBSYSTEM=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="df11", MODE="0664", GROUP="plugdev"
+    SUBSYSTEM=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="5740", MODE="0664", GROUP="plugdev"
+    SUBSYSTEM=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="3754", MODE="0664", GROUP="plugdev"
+    ATTRS{idVendor}=="0483", MODE="0666", ENV{ID_MM_DEVICE_IGNORE}="1", ENV{ID_MM_PORT_IGNORE}="1"
+    ATTRS{idVendor}=="0483", ATTRS{idProduct}=="5740", MODE="0666", ENV{ID_MM_DEVICE_IGNORE}="1", ENV{ID_MM_PORT_IGNORE}="1"
+  '';
 
-   security.wrappers.ubridge = {
+  security.wrappers.ubridge = {
     source  = "${pkgs.ubridge.out}/bin/ubridge";
     owner   = "nobody";
     group   = "nogroup";
     capabilities = "cap_net_admin,cap_net_raw+ep";
-   };
+  };
 
-   environment.etc = {
+  environment.etc = {
     "per-user/alacritty/alacritty.yml".text = import ./alacritty.nix { zsh = pkgs.zsh; };
     "per-user/tmux/tmux.conf".text = import ./tmux.nix { zsh = pkgs.zsh; };
     "per-user/i3/config".text = import ./i3.nix { zsh = pkgs.zsh; };
     "per-user/i3blocks/i3blocks.conf".text = import ./i3blocks.nix { zsh = pkgs.zsh; };
     "per-user/zsh/zshrc".text = import ./zshrc.nix { zsh = pkgs.zsh; };
-   };
+  };
 
-   environment.etc."containers/policy.json" = {
-    mode="0644";
-    text=''
+  environment.etc."containers/policy.json" = {
+    mode = "0644";
+    text = ''
       {
         "default": [
           {
@@ -271,15 +289,16 @@ in {
           }
       }
     '';
-   };
+  };
 
   environment.etc."containers/registries.conf" = {
-    mode="0644";
-    text=''
+    mode = "0644";
+    text = ''
       [registries.search]
       registries = ['docker.io', 'quay.io']
     '';
   };
+
   environment.sessionVariables.TERMINAL = [ "alacritty" ];
   environment.sessionVariables.EDITOR = [ "vim" ];
   environment.pathsToLink = [ "/libexec" ];
@@ -295,9 +314,7 @@ in {
   programs.gnupg.agent = {
     enable = true;
     enableSSHSupport = false;
-    pinentryFlavor = "curses";
   };
-
 
   programs.ssh = {
     startAgent = true;
@@ -330,20 +347,19 @@ in {
   services.printing.enable = true;
 
   # Enable sound.
-  sound.enable = true;
-  hardware.pulseaudio.enable = true;
+  services.pulseaudio.enable = false;
+  services.pulseaudio.support32Bit = true;
+
   hardware.sane.enable = true;
-  hardware.opengl.driSupport32Bit = true;
-  hardware.opengl.extraPackages32 = with pkgs.pkgsi686Linux; [ libva ];
-  hardware.pulseaudio.support32Bit = true;
+  hardware.graphics.enable32Bit = true;
+  hardware.graphics.extraPackages32 = with pkgs.pkgsi686Linux; [ libva ];
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = true;
   hardware.enableAllFirmware = true;
-	
 
   fonts.packages = with pkgs; [
     noto-fonts
-    noto-fonts-cjk
+    noto-fonts-cjk-sans
     noto-fonts-emoji
     liberation_ttf
     fira-code
@@ -351,36 +367,32 @@ in {
     dina-font
   ];
 
- 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  # 
+  #
   users.groups.plugdev = {};
   users.users.alan = {
-     isNormalUser = true;
-     uid = 1000;
-     home = "/home/alan";
-     extraGroups = [ "wheel" "networkmanager" "docker" "ubridge" "adbusers" "scanner" "lp" "dialout" "plugdev" ];
-     shell = pkgs.zsh;
-     subUidRanges = [{ startUid = 100000; count = 65536; }];
-     subGidRanges = [{ startGid = 100000; count = 65536; }];
-     packages = [ vscodeWithExtensions ];
-   };
-
+    isNormalUser = true;
+    uid = 1000;
+    home = "/home/alan";
+    extraGroups = [ "wheel" "networkmanager" "docker" "ubridge" "adbusers" "scanner" "lp" "dialout" "plugdev" "messagebus" "bus" ];
+    shell = pkgs.zsh;
+    subUidRanges = [{ startUid = 100000; count = 65536; }];
+    subGidRanges = [{ startGid = 100000; count = 65536; }];
+    packages = [ vscodeWithExtensions ];
+  };
 
   systemd.packages = [ pkgs.fwupd ];
   services.sshd.enable = true;
 
   services.zerotierone.enable = true;
-  services.zerotierone.joinNetworks = ["1c33c1ced08e8aba"];
-
+  services.zerotierone.joinNetworks = [ "1c33c1ced08e8aba" ];
 
   virtualisation.docker = {
-        enable = true;
-        storageDriver = "zfs";
+    enable = true;
+    storageDriver = "zfs";
   };
   systemd.services.docker.path = [ pkgs.zfs ];
-  systemd.services.docker.environment = {
-  };
+  systemd.services.docker.environment = { };
   virtualisation.docker.extraOptions = "--config-file=${pkgs.writeText "daemon.json" (builtins.toJSON { experimental = true; })}";
 
   virtualisation.virtualbox.host.enable = false;
@@ -392,17 +404,17 @@ in {
 
       #mi-scales = {
       #  image = "lolouk44/xiaomi-mi-scale:latest";
-     #   volumes = [
-     #     "/var/run/dbus/:/var/run/dbus/"
-     #     "/home/alan/Workspace/alan/mi-scale/data:/data/"
-     #   ];
-     #   extraOptions = [
-     #      "--network=host"
-     #      "--cap-add=NET_ADMIN"
-     #      "--cap-add=NET_RAW"
-     #      "--privileged"
-     #   ];
-     # };
+      #   volumes = [
+      #     "/var/run/dbus/:/var/run/dbus/"
+      #     "/home/alan/Workspace/alan/mi-scale/data:/data/"
+      #   ];
+      #   extraOptions = [
+      #      "--network=host"
+      #      "--cap-add=NET_ADMIN"
+      #      "--cap-add=NET_RAW"
+      #      "--privileged"
+      #   ];
+      # };
 
       #room-assistant = {
       #  image = "alan01252/room-assistant-fork:latest";
@@ -410,13 +422,13 @@ in {
       #    "/var/run/dbus/:/var/run/dbus/"
       #    "/home/alan/Workspace/alan/room-assistant:/room-assistant/config/"
       #  ];
-#	cmd = ["--verbose"];
-#        extraOptions = [ 
-#           "--network=host"
-#           "--cap-add=NET_ADMIN"
-#           "--cap-add=NET_RAW"
-#        ];
-#      };
+      #       cmd = ["--verbose"];
+      #        extraOptions = [
+      #           "--network=host"
+      #           "--cap-add=NET_ADMIN"
+      #           "--cap-add=NET_RAW"
+      #        ];
+      #      };
     };
   };
 
@@ -424,30 +436,32 @@ in {
 
   services.zfs.autoScrub.enable = true;
 
-  services.k3s ={
+  services.k3s = {
     enable = false;
-    extraFlags = "--no-deploy traefik --no-deploy servicelb --no-deploy coredns --no-deploy metrics-server --no-flannel" ;
+    extraFlags = "--no-deploy traefik --no-deploy servicelb --no-deploy coredns --no-deploy metrics-server --no-flannel";
   };
 
   programs.adb.enable = true;
 
-
   services.gnome.gnome-keyring.enable = true;
-  services.dbus.packages = [ pkgs.gnome3.gnome-keyring ];
   services.passSecretService.enable = true;
   security.pam.services.sddm.enableGnomeKeyring = true;
 
+  services.dbus.packages = [
+    allowAlanDbusPackage # <-- Our custom package goes here
+    pkgs.gnome-keyring # Keep this if you still need it
+  ];
 
   services.dnscrypt-proxy2 = {
     enable = true;
     settings = {
       listen_addresses = [ "0.0.0.0:53" ];
       ipv6_servers = true;
-      block_ipv6= true;
+      block_ipv6 = true;
       require_dnssec = true;
       #forwarding_rules = "/etc/dnscrypt-proxy/forwarding-rules.txt";
       cloaking_rules = "/etc/dnscrypt-proxy/cloaking-rules.txt";
-      server_names = ["cloudflare"];
+      server_names = [ "cloudflare" ];
 
       sources.public-resolvers = {
         urls = [
@@ -458,8 +472,8 @@ in {
         minisign_key = "RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3";
       };
 
-      #server_names = [  
-	#"sdns://AQcAAAAAAAAADTUxLjE1OC4xNjYuOTcgAyfzz5J-mV9G-yOB4Hwcdk7yX12EQs5Iva7kV3oGtlEgMi5kbnNjcnlwdC1jZXJ0LmFjc2Fjc2FyLWFtcy5jb20"
+      #server_names = [
+      #  "sdns://AQcAAAAAAAAADTUxLjE1OC4xNjYuOTcgAyfzz5J-mV9G-yOB4Hwcdk7yX12EQs5Iva7kV3oGtlEgMi5kbnNjcnlwdC1jZXJ0LmFjc2Fjc2FyLWFtcy5jb20"
       #];
     };
   };
@@ -468,18 +482,14 @@ in {
     ConfigurationDirectory = "dnscrypt-proxy";
   };
 
-   services.strongswan.enable = true;
+  services.strongswan.enable = true;
 
-
-
-    security.wrappers.arp-scan = {
-      source  = "${pkgs.arp-scan.out}/bin/arp-scan";
-      capabilities = "cap_net_raw,cap_net_admin=eip";
-      owner = "alan";
-      group = "users";
-    };
-
+  security.wrappers.arp-scan = {
+    source  = "${pkgs.arp-scan.out}/bin/arp-scan";
+    capabilities = "cap_net_raw,cap_net_admin=eip";
+    owner = "alan";
+    group = "users";
+  };
 
 
 }
-

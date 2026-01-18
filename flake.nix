@@ -2,18 +2,37 @@
 
 
    inputs = {
-      nixpkgs.url = "nixpkgs/nixos-23.11";
+      nixpkgs.url = "nixpkgs/nixos-25.05";
       nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
+      flake-utils.url = "github:numtide/flake-utils";
+      claude-desktop = {
+        url = "github:k3d3/claude-desktop-linux-flake";
+        inputs.nixpkgs.follows    = "nixpkgs";
+        inputs.flake-utils.follows = "flake-utils";
+      };
+      ai-assistant = {
+	  url = "path:/home/alan/Workspace/alan/ai-assistant";
+	  inputs.nixpkgs.follows = "nixpkgs";
+      };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable }: 
+  outputs = { self, nixpkgs, nixpkgs-unstable, flake-utils, claude-desktop, ai-assistant }:
+
   let 
     unstableOverlay = final: prev: {
       unstable = import nixpkgs-unstable {
         system = "x86_64-linux";
 	config.allowUnfree = true;
+ 	config.permittedInsecurePackages = [
+            "dotnet-sdk-6.0.428" "dotnet-runtime-6.0.36"
+          ];
       };
     };
+
+
+    claudeOverlay = (final: prev: {
+              claudeDesktopFhs = claude-desktop.packages.x86_64-linux.claude-desktop-with-fhs;
+            });
 
 
     openvpnOverlay = final: prev: {
@@ -34,8 +53,15 @@
       modules = [ 
          ({
            nixpkgs = {
-             overlays = [ unstableOverlay openvpnOverlay ];
+             overlays = [ unstableOverlay openvpnOverlay claudeOverlay ];
              config.allowUnfree = true; 
+ config.permittedInsecurePackages = [
+                "dotnet-sdk-6.0.428" "dotnet-runtime-6.0.36"
+
+              ];
+
+
+
            };
          })
 	./configuration.nix 

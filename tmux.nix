@@ -1,7 +1,12 @@
 { zsh }:''
 set -g prefix C-a
 setw -g mouse on
-set -g history-limit 30000
+set -g history-limit 100000
+set -g set-clipboard on
+set -s escape-time 10
+set -g focus-events on
+set -g renumber-windows on
+set -g default-terminal "tmux-256color"
 set -g status-keys vi
 set -g mode-keys vi
 bind P paste-buffer
