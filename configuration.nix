@@ -240,7 +240,7 @@ in {
     gettext
     awscli2
     ssm-session-manager-plugin
-    unstable.codex
+    codex
     dunst
   ];
 
@@ -382,6 +382,9 @@ in {
   };
 
   systemd.packages = [ pkgs.fwupd ];
+  systemd.tmpfiles.rules = [
+    "d /var/cache/sccache 0775 root nixbld -"
+  ];
   services.sshd.enable = true;
 
   services.zerotierone.enable = true;

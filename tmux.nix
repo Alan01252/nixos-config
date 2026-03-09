@@ -7,6 +7,11 @@ set -s escape-time 10
 set -g focus-events on
 set -g renumber-windows on
 set -g default-terminal "tmux-256color"
+set -g allow-passthrough on
+set -as terminal-features ",xterm-ghostty:RGB"
+set -as terminal-features ",xterm-ghostty:clipboard"
+set -as terminal-features ",xterm-256color:RGB"
+set -as terminal-features ",xterm-256color:clipboard"
 set -g status-keys vi
 set -g mode-keys vi
 bind P paste-buffer
