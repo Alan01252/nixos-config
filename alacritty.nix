@@ -1,6 +1,6 @@
 { zsh }:''
 env:
-  TERM: screen-256color
+  TERM: xterm-256color
 
 window:
   opacity: 1.0

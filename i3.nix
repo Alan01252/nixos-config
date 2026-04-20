@@ -32,6 +32,8 @@ floating_modifier $mod
 
 # start a terminal
 bindsym $mod+Return exec ghostty
+bindsym $mod+Ctrl+s exec ghostty -e sagaclaw chat
+bindsym $mod+y exec yaaf-gui
 
 # kill focused window
 bindsym $mod+Shift+q kill

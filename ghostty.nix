@@ -1,7 +1,8 @@
 { zsh }:''
-# Show previews only for explicit OSC 8 hyperlinks so hyperlink-capable apps
-# are visible without adding hover UI to every plain URL match.
-link-previews = osc8
+# Enable both ordinary URL matching and explicit OSC 8 hyperlink previews
+# so link behavior is easier to verify while testing.
+link-url = true
+link-previews = true
 
 # Keep Ghostty on the window manager's simple chrome instead of the GTK
 # titlebar/menu UI.

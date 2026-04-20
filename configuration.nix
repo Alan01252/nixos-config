@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ lib, config, pkgs, channels, ... }:
+{ lib, config, pkgs, channels, yaaf, ... }:
 
 let
 
@@ -48,6 +48,14 @@ let
   pythonWithPackages = import ./python.nix {
     pkgs = pkgs.unstable;
   };
+
+  sagaclawWrapper = pkgs.writeShellScriptBin "sagaclaw" ''
+    exec /run/wrappers/bin/sudo /run/current-system/sw/bin/nixos-container run sagaclaw -- /run/current-system/sw/bin/env SAGACLAW_CONTROL_SOCKET=/var/lib/sagaclaw/control.sock /run/current-system/sw/bin/sagaclaw ctl "$@"
+  '';
+
+  sagaclawJournalWrapper = pkgs.writeShellScriptBin "sagaclaw-journalctl" ''
+    exec /run/wrappers/bin/sudo /run/current-system/sw/bin/journalctl -M sagaclaw "$@"
+  '';
 
   #geminiOverlay = import ./overlays/gemini-cli.nix;
 
@@ -112,6 +120,8 @@ in {
     extraUserActivation = {
       text = ''
         ln -sfn /etc/per-user/alacritty ~/.config/
+        mkdir -p ~/.config/ghostty
+        ln -sfn /etc/per-user/ghostty/config ~/.config/ghostty/config
         ln -sfn /etc/per-user/i3 ~/.config/
         ln -sfn /etc/per-user/i3blocks/i3blocks.conf ~/.i3blocks.conf
         ln -sfn /etc/per-user/zsh/zshrc ~/.zshrc
@@ -162,6 +172,10 @@ in {
   time.timeZone = "Europe/London";
 
   environment.systemPackages = with pkgs; [
+    sagaclawWrapper
+    sagaclawJournalWrapper
+    yaaf.packages.x86_64-linux.yaaf
+    yaaf.packages.x86_64-linux.yaaf-gui
     claudeDesktopFhs
     unstable.gemini-cli
     nginx
@@ -169,7 +183,7 @@ in {
     qt5.full
     pkg-config
     libusb1.dev
-    wget vim unstable.google-chrome fwupd efivar sysfsutils ripgrep
+    wget vim unstable.google-chrome fwupd efivar sysfsutils ripgrep bubblewrap
     unstable.step-cli
     unstable.firefox
     shellcheck
@@ -266,6 +280,7 @@ in {
 
   environment.etc = {
     "per-user/alacritty/alacritty.yml".text = import ./alacritty.nix { zsh = pkgs.zsh; };
+    "per-user/ghostty/config".text = import ./ghostty.nix { zsh = pkgs.zsh; };
     "per-user/tmux/tmux.conf".text = import ./tmux.nix { zsh = pkgs.zsh; };
     "per-user/i3/config".text = import ./i3.nix { zsh = pkgs.zsh; };
     "per-user/i3blocks/i3blocks.conf".text = import ./i3blocks.nix { zsh = pkgs.zsh; };
@@ -301,7 +316,7 @@ in {
     '';
   };
 
-  environment.sessionVariables.TERMINAL = [ "alacritty" ];
+  environment.sessionVariables.TERMINAL = [ "ghostty" ];
   environment.sessionVariables.EDITOR = [ "vim" ];
   environment.pathsToLink = [ "/libexec" ];
   environment.etc.hosts.mode = "0644";
@@ -341,6 +356,34 @@ in {
 
   services.openssh.enable = true;
   services.keybase.enable = true;
+
+  security.sudo.extraRules = [
+    {
+      users = [ "alan" ];
+      commands = [
+        {
+          command = "/run/current-system/sw/bin/nixos-container run sagaclaw -- /run/current-system/sw/bin/env SAGACLAW_CONTROL_SOCKET=/var/lib/sagaclaw/control.sock /run/current-system/sw/bin/sagaclaw ctl status";
+          options = [ "NOPASSWD" ];
+        }
+        {
+          command = "/run/current-system/sw/bin/nixos-container run sagaclaw -- /run/current-system/sw/bin/env SAGACLAW_CONTROL_SOCKET=/var/lib/sagaclaw/control.sock /run/current-system/sw/bin/sagaclaw ctl chat";
+          options = [ "NOPASSWD" ];
+        }
+        {
+          command = "/run/current-system/sw/bin/nixos-container run sagaclaw -- /run/current-system/sw/bin/env SAGACLAW_CONTROL_SOCKET=/var/lib/sagaclaw/control.sock /run/current-system/sw/bin/sagaclaw ctl chat *";
+          options = [ "NOPASSWD" ];
+        }
+        {
+          command = "/run/current-system/sw/bin/nixos-container run sagaclaw -- /run/current-system/sw/bin/env SAGACLAW_CONTROL_SOCKET=/var/lib/sagaclaw/control.sock /run/current-system/sw/bin/sagaclaw ctl reload-plugins";
+          options = [ "NOPASSWD" ];
+        }
+        {
+          command = "/run/current-system/sw/bin/journalctl -M sagaclaw *";
+          options = [ "NOPASSWD" ];
+        }
+      ];
+    }
+  ];
 
   system.stateVersion = "20.09"; # Did you read the comment?
   networking.firewall.enable = false;
