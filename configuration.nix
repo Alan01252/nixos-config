@@ -116,6 +116,7 @@ in {
         ln -sfn /etc/per-user/i3blocks/i3blocks.conf ~/.i3blocks.conf
         ln -sfn /etc/per-user/zsh/zshrc ~/.zshrc
         ln -sfn /etc/per-user/tmux/tmux.conf ~/.tmux.conf
+        ln -sfn /etc/per-user/vim/vimrc ~/.vimrc
         mkdir -p ~/.zfunctions
         ln -sfn ${pureZshPrompt}/pure.zsh ~/.zfunctions/prompt_pure_setup
         ln -sfn ${pureZshPrompt}/async.zsh ~/.zfunctions/async
@@ -269,6 +270,7 @@ in {
     "per-user/i3/config".text = import ./i3.nix { zsh = pkgs.zsh; };
     "per-user/i3blocks/i3blocks.conf".text = import ./i3blocks.nix { zsh = pkgs.zsh; };
     "per-user/zsh/zshrc".text = import ./zshrc.nix { zsh = pkgs.zsh; };
+    "per-user/vim/vimrc".text = import ./vim.nix { };
   };
 
   environment.etc."containers/policy.json" = {

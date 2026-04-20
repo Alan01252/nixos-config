@@ -185,18 +185,12 @@ bindsym $mod+Shift+v exec google-chrome-stable --proxy-server="socks5://macos:10
 bindsym $mod+Shift+i exec "maim -s | xclip -selection clipboard -t image/png"
 new_window 1pixel
 
-# Clipboard: keep primary and clipboard selections in sync when available.
-exec_always --no-startup-id sh -c 'command -v autocutsel >/dev/null && autocutsel -fork'
-exec_always --no-startup-id sh -c 'command -v autocutsel >/dev/null && autocutsel -selection PRIMARY -fork'
-
 # Display and input tweaks.
-exec_always --no-startup-id sh -c 'command -v xrandr >/dev/null && xrandr --output DP-2 --auto --output DP-1 --auto --right-of DP-2'
-exec_always --no-startup-id sh -c 'command -v xset >/dev/null && xset r rate 250 35'
-exec_always --no-startup-id i3-msg 'workspace number 1; workspace number 2; workspace number 3; workspace number 4; workspace number 5; workspace number 6; workspace number 7; workspace number 8; workspace number 9; workspace number 10'
+exec --no-startup-id sh -c 'command -v xrandr >/dev/null && xrandr --output DP-2 --auto --output DP-1 --auto --right-of DP-2'
+exec --no-startup-id sh -c 'command -v xset >/dev/null && xset r rate 250 35'
+exec --no-startup-id i3-msg 'workspace number 1; workspace number 2; workspace number 3; workspace number 4; workspace number 5; workspace number 6; workspace number 7; workspace number 8; workspace number 9; workspace number 10'
 
 bindsym $mod+Ctrl+bracketleft exec /home/alan/bin/start-recording.sh
-exec_always --no-startup-id /home/alan/bin/greek-flash.sh
-
 
 for_window [class="xfreerdp"]   floating enable
 

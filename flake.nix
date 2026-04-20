@@ -5,7 +5,7 @@
       nixpkgs.url = "nixpkgs/nixos-25.05";
       nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
       flake-utils.url = "github:numtide/flake-utils";
-      codex-cli-nix.url = "github:sadjow/codex-cli-nix/387560b19729bfdb01dad9a12b46ec6e75286cca";
+      codex-cli-nix.url = "github:sadjow/codex-cli-nix";
       claude-desktop = {
         url = "github:k3d3/claude-desktop-linux-flake";
         inputs.nixpkgs.follows    = "nixpkgs";
